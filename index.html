@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PF Attachment Database</title>
+    <style>
+        /* CSS 변수 설계 (테마용) */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-glass: rgba(255, 255, 255, 0.4);
+            --border-glass: rgba(255, 255, 255, 0.3);
+            --shadow-glass: rgba(31, 38, 135, 0.08);
+            --text-color: #2c3e50;
+            --text-muted: #7f8c8d;
+            --accent-color: #5c6bc0;
+            --card-bg: rgba(255, 255, 255, 0.45);
+            --card-title: #1a252f;
+            --table-header: rgba(255, 255, 255, 0.5);
+            --badge-green: rgba(46, 204, 113, 0.2);
+            --badge-green-text: #27ae60;
+            --badge-red: rgba(231, 76, 60, 0.2);
+            --badge-red-text: #c0392b;
+            --benefit-text: #178a46;
+            --penalty-text: #c7352f;
+            --filter-active-bg: rgba(92, 107, 192, 0.18);
+            --chip-bg: rgba(255, 255, 255, 0.34);
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --bg-glass: rgba(15, 23, 42, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --shadow-glass: rgba(0, 0, 0, 0.3);
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-color: #818cf8;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --card-title: #f8fafc;
+            --table-header: rgba(15, 23, 42, 0.5);
+            --benefit-text: #7ddf9f;
+            --penalty-text: #ff8b86;
+            --filter-active-bg: rgba(129, 140, 248, 0.18);
+            --chip-bg: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* 글래스모피즘용 고정 배경 광원 */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.55;
+            transition: all 0.5s ease;
+        }
+
+        .blob-1 {
+            width: 320px;
+            height: 320px;
+            background: #a78bfa;
+            top: 10%;
+            left: -80px;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: #60a5fa;
+            bottom: 15%;
+            right: -80px;
+        }
+
+        /* 모바일 우선 컨테이너 */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 90px;
+            /* 하단 네비게이션 공간 */
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 글래스 공통 프레임 */
+        .glass-panel {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 var(--shadow-glass);
+            border-radius: 20px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        /* 헤더 레이아웃 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--card-title);
+        }
+
+        .theme-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-glass);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            transition: background 0.3s;
+        }
+
+        .theme-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 검색창 */
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* 탭 컨텐츠 관리 */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .filter-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            /* ← 추가: iOS 관성 스크롤 */
+            cursor: grab;
+            /* ← 추가: 데스크탑 드래그 커서 */
+        }
+
+        .filter-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            border: 1px solid var(--border-glass);
+            background: var(--chip-bg);
+            color: var(--text-muted);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .filter-chip.active {
+            color: var(--accent-color);
+            background: var(--filter-active-bg);
+            border-color: rgba(92, 107, 192, 0.34);
+        }
+
+        .section-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 8px 2px 0;
+        }
+
+        .section-heading h3 {
+            color: var(--card-title);
+            font-size: 0.92rem;
+            font-weight: 900;
+        }
+
+        .section-count {
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag-pill {
+            border-radius: 999px;
+            border: 1px solid var(--border-glass);
+            background: var(--chip-bg);
+            padding: 4px 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-muted);
+        }
+
+        .text-benefit {
+            color: var(--benefit-text);
+            font-weight: 800;
+        }
+
+        .text-penalty {
+            color: var(--penalty-text);
+            font-weight: 800;
+        }
+
+        /* 카드 리스트 */
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .item-card:hover {
+            border-color: rgba(92, 107, 192, 0.35);
+            box-shadow: 0 10px 24px var(--shadow-glass);
+        }
+
+        .item-card:active {
+            transform: scale(0.98);
+        }
+
+        .item-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .item-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--card-title);
+            line-height: 1.25;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.25);
+            color: var(--text-color);
+            border: 1px solid var(--border-glass);
+            flex-shrink: 0;
+        }
+
+        .stat-chip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .stat-chip {
+            min-width: 0;
+            background: var(--chip-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .stat-chip-label {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0;
+            margin-bottom: 3px;
+        }
+
+        .stat-chip-value {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-color);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            color: var(--accent-color);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 28px 10px;
+        }
+
+        /* 상세 모달 팝업 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.24s ease-out;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-glass);
+            border-top: 1px solid var(--border-glass);
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transform: translateY(100%);
+            transition: transform 0.36s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        /* 표 스타일 (구글 문서 / 마크다운 렌더링 스타일) */
+        .stat-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.85rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+        }
+
+        .stat-table th,
+        .stat-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .stat-table th {
+            background: var(--table-header);
+            font-weight: 700;
+            color: var(--card-title);
+        }
+
+        .stat-table td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-row-title {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .markdown-block {
+            color: var(--text-color);
+            font-size: 0.86rem;
+            line-height: 1.65;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .markdown-block p {
+            margin: 0;
+        }
+
+        .markdown-block strong {
+            color: var(--card-title);
+            font-weight: 800;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--card-title);
+            margin-top: 5px;
+        }
+
+        /* 비교 기능 UI */
+        .compare-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .selector-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .glass-select {
+            width: 50%;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            padding: 10px;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .compare-badge-up {
+            background: var(--badge-green);
+            color: var(--badge-green-text);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .compare-badge-down {
+            background: var(--badge-red);
+            color: var(--badge-red-text);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        /* 하단 고정 네비게이션 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 448px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 var(--shadow-glass);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 50;
+        }
+
+        [data-theme="dark"] .bottom-nav {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            width: 33%;
+            height: 100%;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-color);
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 글래스모피즘용 고정 배경 blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="app-container">
+
+        <!-- 헤더 영역 -->
+        <header class="glass-panel header">
+            <h1>PF 부착물 라이브러리</h1>
+            <button class="theme-btn" id="themeToggleBtn">☀️</button>
+        </header>
+
+        <!-- [탭 1] 부착물 목록 -->
+        <main id="listTab" class="tab-content active">
+            <!-- 검색 튜브 -->
+            <div class="glass-panel search-bar">
+                <input type="text" id="searchInput" placeholder="부착물 이름 또는 카테고리 검색...">
+            </div>
+
+            <div class="glass-panel filter-panel">
+                <div class="filter-row" id="categoryFilter">
+                    <button class="filter-chip active" data-filter="all">전체</button>
+                    <button class="filter-chip" data-filter="barrel">Barrel</button>
+                    <button class="filter-chip" data-filter="muzzle">Muzzle</button>
+                    <button class="filter-chip" data-filter="suppressor">Suppressor</button>
+                    <button class="filter-chip" data-filter="grip">Grip</button>
+                </div>
+                <div class="filter-row" id="purposeFilter">
+                    <button class="filter-chip active" data-filter="all">전체 성향</button>
+                    <button class="filter-chip" data-filter="recoil">반동 제어</button>
+                    <button class="filter-chip" data-filter="mobility">기동성 유지</button>
+                    <button class="filter-chip" data-filter="lowPenalty">패널티 적음</button>
+                    <button class="filter-chip" data-filter="power">화력 보강</button>
+                </div>
+            </div>
+
+            <!-- 리스트 스크롤 영역 -->
+            <div class="card-list" id="attachmentListContainer">
+                <!-- JS에서 카드 동적 생성 -->
+            </div>
+        </main>
+
+        <!-- [탭 2] 부착물 비교 -->
+        <main id="compareTab" class="tab-content">
+            <div class="glass-panel compare-grid">
+                <h2>실시간 다각 비교</h2>
+                <div class="selector-box">
+                    <select id="compareSelect1" class="glass-select"></select>
+                    <select id="compareSelect2" class="glass-select"></select>
+                </div>
+
+                <!-- 비교용 렌더링 테이블 -->
+                <div id="compareTableContainer" style="margin-top: 10px;">
+                    <!-- JS 동적 생성 -->
+                </div>
+            </div>
+        </main>
+
+        <!-- 하단 고정 네비게이션 -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="switchTab('list', event)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 6H20V8H4V6ZM4 11H20V13H4V11ZM4 16H20V18H4V16Z" />
+                </svg>
+                목록
+            </button>
+            <button class="nav-btn" onclick="switchTab('compare', event)">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M18 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.1 2 18 2ZM18 20H6V4H18V20ZM9 9H15V11H9V9ZM9 13H15V15H9V13Z" />
+                </svg>
+                대조 비교
+            </button>
+        </nav>
+    </div>
+
+    <!-- 상세 보기 글래스 하프 모달 -->
+    <div class="modal" id="detailModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalTitle" style="font-weight: 800; color: var(--card-title);">부착물 명칭</h2>
+                <button class="close-btn" onclick="toggleModal(false)">&times;</button>
+            </div>
+            <div id="modalOneLiner" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">한 줄 요약</div>
+
+            <div class="glass-panel markdown-block" style="padding: 12px; margin-top: 5px;">
+                <p id="modalAdvancedText"></p>
+            </div>
+
+            <div class="section-title">상세 격발 데이터 (Layer 1)</div>
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th>조절 스탯</th>
+                        <th>수직 영역 (Pitch)</th>
+                        <th>수평 영역 (Yaw)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="stat-row-title">모델 반동 (총구)</td>
+                        <td id="tdModelVert">0%</td>
+                        <td id="tdModelHoriz">0%</td>
+                    </tr>
+                    <tr>
+                        <td class="stat-row-title">카메라 반동 (화면)</td>
+                        <td id="tdCamVert">0%</td>
+                        <td id="tdCamHoriz">0%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="markdown-block" id="modalRecoilDesc">격발 성향 설명</div>
+        </div>
+    </div>
+
+    <!-- 데이터 스크립트 -->
+    <script>
+        // 분석 데이터셋
+        const dataset = [
+            {
+                id: "duty",
+                name: "DUTY SUPPRESSOR",
+                category: "소음기",
+                oneLiner: "조작 속도와 기동성을 감소시키는 대신, 탄속과 사거리를 상승시키고 전체 반동 및 화면 진동을 고르게 제어하는 밸런스형 소음기.",
+                advanced: "소음 효과와 함께 탄속이 2% 증가하고, 대미지 사거리 역시 2% 증가하는 버프를 받습니다. 이동 및 조준 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 모든 조작 속도가 10% 감소하며, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
+                modelVert: "10% 감소",
+                modelHoriz: "10% 감소",
+                camVert: "10% 감소",
+                camHoriz: "10% 감소",
+                recoilDesc: "총기 자체의 물리적 이동뿐만 아니라 화면 전체가 흔들리는 진동까지 일정하게 제어해주어 전체적으로 반동이 균형 있고 균일하게 줄어든 느낌을 줍니다."
+            },
+            {
+                id: "light",
+                name: "LIGHT SUPPRESSOR",
+                category: "소음기",
+                oneLiner: "반동 감소율은 작지만, 패널티를 최소화하여 순정 총기 고유의 빠른 무빙 속도를 완벽하게 보존하면서 탄속과 사거리를 미세하게 늘려주는 소음기.",
+                advanced: "소음 효과와 함께 탄속이 1.5% 증가하고, 대미지 사거리가 1.5% 증가하는 미세한 버프를 받습니다. 흔들림(Sway)은 2.5% 안정되나 조작 속도가 2.5% 아주 소폭 감소하며, 기본 및 조준 이동 속도는 패널티 없이 그대로 유지됩니다.",
+                modelVert: "5% 감소",
+                modelHoriz: "5% 감소",
+                camVert: "5% 감소",
+                camHoriz: "5% 감소",
+                recoilDesc: "반동 감소 체감은 비교적 약하지만, 순정 격발 상태의 반동 느낌을 그대로 유지하면서 상하 들림만 아주 약간 부드럽게 완화해 줍니다."
+            },
+            {
+                id: "medium",
+                name: "MEDIUM SUPPRESSOR",
+                category: "소음기",
+                oneLiner: "조준 속도와 이동 속도를 가볍게 희생하는 대신 탄속과 대미지 사거리를 2.5% 늘리고 수직/수평 물리 반동과 화면 흔들림을 고르게 완화하는 소음기.",
+                advanced: "소음 효과와 함께 탄속이 2.5% 증가하고, 대미지 사거리가 2.5% 증가하는 버프를 받습니다. 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 조작 속도가 7.5% 감소하며, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
+                modelVert: "5% 감소",
+                modelHoriz: "5% 감소",
+                camVert: "5% 감소",
+                camHoriz: "5% 감소",
+                recoilDesc: "가벼운 소음기와 동일하게 반동이 아주 미세하게 줄어들어 격발 시 조준점 상승이 약간 둔해진 느낌을 줍니다."
+            },
+            {
+                id: "heavy",
+                name: "HEAVY SUPPRESSOR",
+                category: "소음기",
+                oneLiner: "조준 및 이동 속도를 무겁게 희생하는 패널티를 대가로, 소음 효과를 극대화하고 탄속과 사거리를 크게 보강하며 모든 물리 반동과 흔들림을 강력히 억제하는 소음기.",
+                advanced: "소음 효과와 함께 탄속이 5% 증가하고, 대미지 사거리 역시 5% 증가하는 탄도학 버프를 제공합니다. 조준 흔들림(Sway) 또한 10% 안정됩니다. 다만 패널티로 조준 속도를 포함한 조작 속도가 10% 감소하고, 기본 이동 속도가 7.5%, 조준 시 이동 속도가 12.5% 감소합니다.",
+                modelVert: "15% 감소",
+                modelHoriz: "15% 감소",
+                camVert: "15% 감소",
+                camHoriz: "15% 감소",
+                recoilDesc: "물리적 반동과 화면 진동을 가장 확실하게 억제해주어, 연사 시 손끝에 느껴지는 총기의 상하 흔들림이 크게 가라앉은 묵직한 안정감을 줍니다."
+            },
+            {
+                id: "comped",
+                name: "COMPED SUPPRESSOR",
+                category: "소음기",
+                oneLiner: "소음 범위가 좁은 아쉬움이 있으나, 탄속과 사거리 손실이 없으며 화면 진동과 수평/수직 물리 반동을 대폭 억제해 주는 성능형 소음기.",
+                advanced: "소음 범위가 다른 소음기들에 비해 다소 좁은 편입니다. 대신 탄속과 대미지 사거리가 패널티 없이 완전히 유지됩니다. 흔들림(Sway)은 2.5% 안정되나 조작 속도가 7.5% 감소하고, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
+                modelVert: "15% 감소",
+                modelHoriz: "15% 감소",
+                camVert: "15% 감소",
+                camHoriz: "15% 감소",
+                recoilDesc: "헤비 소음기와 동일하게 물리 반동과 화면 흔들림을 강력하게 가라앉혀주어 격발 안정성이 크게 체감됩니다."
+            },
+            {
+                id: "muffler",
+                name: "MUFFLER",
+                category: "소음기",
+                oneLiner: "소음 효과가 없고 연사 속도가 감소해 최단 킬 타임이 지연되지만, 반동 회복 속도를 늦추며 수평 반동을 크게, 화면 진동을 고르게 완화하는 감속 머즐.",
+                advanced: "소음 처리 기능이 작동하지 않아 레이더에 노출됩니다. 연사속도(RPM)가 감소하여 최단 킬 타임(TTK)이 지연되는 직접 패널티가 있고 탄속이 10% 감소합니다. 조작 속도는 5% 감소하며 사거리는 순정 상태를 유지합니다.",
+                modelVert: "15% 감소 (회전)",
+                modelHoriz: "10% 감소 (회전)",
+                camVert: "5~10% 감소",
+                camHoriz: "5~10% 감소",
+                recoilDesc: "연사 속도 감소로 격발 주기가 느려져 상하좌우 무작위로 튀는 화면 흔들림이 대폭 감소하며 총기가 부드럽고 수축 제어되는 체감을 줍니다."
+            },
+            {
+                id: "oilfilter",
+                name: "OIL FILTER",
+                category: "소음기",
+                oneLiner: "탄속과 조작 속도를 희생하는 대신, 미니맵 노출을 완전 차단하는 최고 수준의 소음 성능과 함께 물리적인 수평/수직 반동을 대폭 제어하는 소음기.",
+                advanced: "단 5스터드 밖에서 미노출되어 매우 강력한 소음 은폐력을 제공합니다. 대신 탄속이 10% 감소하고 조작 속도 역시 10% 일괄 감소하는 패널티가 있습니다. 기동성(이동 속도)과 대미지 사거리는 패널티 없이 순정 상태를 유지합니다.",
+                modelVert: "9~20% 감소",
+                modelHoriz: "9~20% 감소",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "반동이 튀어 오른 후 제자리로 복귀하는 감쇠 능력이 대폭 상향되어, 격발 중 화면 전체 흔들림 대신 조준선 에임이 쫀득하고 신속하게 정렬되는 유니크한 안정감을 선사합니다."
+            },
+            {
+                id: "angled",
+                name: "ANGLED GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 무빙 조작성, 수직 카메라 반동이 저하되는 대신 수평 회전 반동과 수평 카메라 반동을 제어함.",
+                advanced: "조준 시 이동 속도가 9% 감소하여 무빙 조작성이 소폭 둔화됩니다. 또한 조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소합니다. 탄속, 사거리, 조준선 흔들림(Sway) 스탯은 모두 패널티 없이 완벽하게 유지됩니다.",
+                modelVert: "17% 감소 (회전)",
+                modelHoriz: "9% 감소",
+                camVert: "10% 증가 (패널티)",
+                camHoriz: "9% 감소",
+                recoilDesc: "좌우 퍼짐 무작위성을 대폭 좁혀 집탄의 전반적인 정밀도가 상향된 느낌을 주지만, 쏘는 동안 화면이 위아래로 흔들리는 수직 진동은 다소 늘어납니다."
+            },
+            {
+                id: "potato",
+                name: "POTATO GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 총기 꺼내는 속도, 이동 중 총기 흔들림이 저하되는 대신 물리적으로 밀리는 반동과 카메라 흔들림을 제어함.",
+                advanced: "조준 시 이동 속도가 9% 감소하여 조작성이 소폭 둔해지며, 이동 중 조준 흔들림 스탯이 일괄 5% 증가하는 패널티가 적용됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
+                modelVert: "9% 감소 (이동)",
+                modelHoriz: "9% 감소 (이동)",
+                camVert: "9% 감소",
+                camHoriz: "9% 감소",
+                recoilDesc: "사격 시 총구 자체가 뒤로 가파르게 밀리는 킥과 화면 전체가 흔들리는 현상을 동시에 억제해 주어 시각적으로 상하 흔들림이 정돈된 느낌을 줍니다."
+            },
+            {
+                id: "folding",
+                name: "FOLDING GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 총기 꺼내는 속도, 이동 중 총기 흔들림이 저하되는 대신 조준 시 이동 속도 저하 없이 전반적인 물리 반동과 화면 흔들림을 제어함.",
+                advanced: "조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소하고, 이동 중 조준 흔들림이 일괄 10% 증가하는 패널티를 가집니다. 다만 조준 시 이동 속도를 희생하지 않고 순정 수치를 그대로 유지하여 기동성을 보존합니다. 탄속 및 대미지 사거리 역시 순정을 유지합니다.",
+                modelVert: "9% 감소",
+                modelHoriz: "9% 감소",
+                camVert: "9% 감소",
+                camHoriz: "9% 감소",
+                recoilDesc: "에임이 퍼지는 실제 물리 반동과 화면의 떨림 현상을 가리지 않고 사방의 요동치는 움직임을 고르고 부드럽게 깎아주는 밸런스형 안정감을 보장합니다."
+            },
+            {
+                id: "stubby",
+                name: "STUBBY GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 무빙 조작성, 이동 중 총기 흔들림이 저하되는 대신 카메라 흔들림은 유지하고 총구가 직접 튀는 물리 반동만 제어함.",
+                advanced: "조준 시 이동 속도가 9% 감소하며, 이동 중 조준선 흔들림 스탯이 일괄 17% 개선되어 안정화됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
+                modelVert: "9% 감소",
+                modelHoriz: "9% 감소",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "격발 시 총구 자체가 상하좌우로 튕기는 순수 물리적인 앙등력은 강하게 억제해 주지만, 카메라가 부르르 떨리는 진동은 그대로 살아있어 조준선 중심만 단단히 고정된 느낌을 줍니다."
+            },
+            {
+                id: "romanian",
+                name: "ROMANIAN GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 조준 시 이동 속도, 수직 카메라 반동이 크게 저하되는 대신 수평 카메라 흔들림을 포함한 물리적 반동을 제어함.",
+                advanced: "정조준 사격 시 이동 속도가 무려 17% 대폭 감소하여 무빙 기동성이 무거워집니다. 조준 속도를 포함한 총기 조작 속도 역시 일괄 9% 감소하여 총기 반응성이 느려지지만, 무빙 시 조준선 흔들림 스탯은 일괄 17% 안정됩니다. 탄속 및 사거리는 순정을 유지합니다.",
+                modelVert: "9% 감소",
+                modelHoriz: "9% 감소",
+                camVert: "10% 증가 (패널티)",
+                camHoriz: "17% 감소",
+                recoilDesc: "연사 격발 중 화면 전체가 좌우 수평 방향으로 마구 튀며 적을 가리는 시각적 진동을 무려 17%나 극적으로 지워주는 대가로 상하 진동은 조금 더 거칠어집니다."
+            },
+            {
+                id: "sideways",
+                name: "SIDE WAYS GRIP",
+                category: "그립",
+                oneLiner: "조준 속도, 조작 성능, 물리적 회전 반동이 저하되는 대신 수직 및 롤 카메라 흔들림을 억제하고 지향사격 명중률을 높임.",
+                advanced: "지향사격 확산도가 14% 좁아지고 지향사격 복원 속도가 10% 빨라져 명중률이 강화되며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 정조준 사격 중 이동 속도가 17% 대폭 감소하고 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
+                modelVert: "5% 증가 (패널티)",
+                modelHoriz: "5% 증가 (패널티)",
+                camVert: "변화 없음",
+                camHoriz: "9% 감소",
+                recoilDesc: "실제 탄알이 날아가는 총구 자체의 들림 힘은 약간 무거워지지만, 조준 시 화면이 요동치는 화면 전체의 카메라 흔들림 및 롤(회전) 진동을 고르게 완화해 줍니다."
+            },
+            {
+                id: "chainsaw",
+                name: "CHAINSAW GRIP",
+                category: "그립",
+                oneLiner: "조준경을 통한 정조준이 불가능해지고 조작 속도와 기동성이 저하되는 대신 지향사격 집탄율, 복원력, 카메라 흔들림을 제어함.",
+                advanced: "정조준(ADS) 기능 자체가 제거되어 지향사격 구도로 고정됩니다. 지향사격 확산도가 14% 좁아지고 복원 속도 및 복원력이 일괄 20% 크게 상승합니다. 다만 조작 속도가 일괄 17% 크게 감소하고 조준 시 이동 속도 역시 17% 감소합니다. 이동 사격 시 흔들림은 17% 안정되며 탄속 및 사거리는 순정을 유지합니다.",
+                modelVert: "9% 감소 (회전) / 10% 증가 (이동)",
+                modelHoriz: "9% 감소 (회전) / 10% 증가 (이동)",
+                camVert: "9% 감소",
+                camHoriz: "9% 감소",
+                recoilDesc: "지향 사격에 극대화된 스펙을 제공하여 총기가 요동치는 회전 각도를 고르게 제어해 주지만, 총체적 물리 모델 자체가 뒤로 밀리는 충격(Translation)은 오히려 증가합니다."
+            },
+            {
+                id: "vertical",
+                name: "VERTICAL GRIP",
+                category: "그립",
+                oneLiner: "조준 속도가 미세하게 감소하고 반동 스탯은 변하지 않는 대신 지향사격 정확도와 이동 시 조준선 흔들림을 제어함.",
+                advanced: "지향사격 확산도가 14% 좁아지고 지향 복원 속도가 10% 빠르게 회복됩니다. 또한 이동 중 조준 흔들림(Walk Sway)이 33% 대폭 감소하여 무빙 안정성이 우수합니다. 조작 속도는 약 4.8% 미세하게 감소하며 기본 및 조준 이동 속도, 대미지 사거리는 순정을 유지합니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "물리적인 반동 수치는 가감 없이 완벽한 순정 상태와 동일하게 유지되는 기동 및 유틸리티 전용 지향 그립입니다."
+            },
+            {
+                id: "pistol",
+                name: "PISTOL GRIP",
+                category: "그립",
+                oneLiner: "조준 속도를 포함한 전반적인 조작 속도가 느려지고 반동 스탯은 변하지 않는 대신 지향사격 성능과 이동 중 조준선 흔들림을 제어함.",
+                advanced: "지향사격 확산도가 14% 정돈되고 복원력이 10% 증가하며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 조준 시 이동 속도가 9% 감소하고 조준 속도를 포함한 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "물리적인 총구 튕김이나 화면 흔들림 수치 변화 없이 오직 지향 사격의 집탄율과 기동 시 에임 안정만 보강하는 사양입니다."
+            },
+            {
+                id: "skeleton",
+                name: "SKELETON GRIP",
+                category: "그립",
+                oneLiner: "조준 시 이동 속도가 감소하고 반동은 순정 그대로인 대신 조준 속도, 질주 전환 속도, 총기 꺼내는 속도를 제어함.",
+                advanced: "조준 속도 및 질주 전환 속도가 모두 15% 증가하고 총기를 꺼내는 속도 역시 10% 단축되어 반응성이 민첩해집니다. 추가로 이동 사격 시 흔들림이 13% 안정되지만, 패널티로 조준 시 이동 속도가 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "반동 제어 효과를 전혀 제공하지 않는 대신 조작 관련 모든 스피드를 한계 돌파시켜 주는 근접 순발력 특화형 그립입니다."
+            },
+            {
+                id: "flashhider",
+                name: "머즐 (소염기)",
+                category: "머즐",
+                oneLiner: "지향사격 확산 감쇠가 저하되는 대신 총구 화염을 제거하고 모든 지향 및 조준 카메라 흔들림 반동을 제어함.",
+                advanced: "격발 시의 총구 화염을 완벽히 차단하여 조준점을 맑게 해 줍니다. 조작성 및 기동성 스탯이 완벽히 유지되는 무손실 파츠이나, 단 지향사격 확산 감쇠가 5% 소폭 감소합니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "5% 감소",
+                camHoriz: "5% 감소",
+                recoilDesc: "물리 총구 반동 자체는 완전히 같으나, 격발 시 화면 자체가 진동하며 부르르 떨리는 화면 반동만 지향/조준 모두 5%씩 억제해 줍니다."
+            },
+            {
+                id: "compensator",
+                name: "COMPENSATOR (컴펜)",
+                category: "머즐",
+                oneLiner: "수직 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 수평 카메라 흔들림 반동을 조준 및 지향 사격 시 크게 제어함.",
+                advanced: "조작 속도, 기동성, 탄속, 사거리 등 어떠한 조작 및 탄도학적 패널티도 존재하지 않는 완전 무제한 순정 스펙을 지닙니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "10~20% 증가 (패널티)",
+                camHoriz: "30~40% 감소",
+                recoilDesc: "격발 시 화면이 좌우로 불규칙하게 흔들려 추적이 어려운 현상을 대폭 차단해 주는 대신 상하로 거칠게 상승하는 수직 진동은 소폭 증가합니다."
+            },
+            {
+                id: "muzzlebrake",
+                name: "MUZZLE BRAKE (머즐브)",
+                category: "머즐",
+                oneLiner: "수평 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 수직 카메라 흔들림 반동을 조준 및 지향 사격 시 크게 제어함.",
+                advanced: "컴펜세이터와 동일하게 조작 속도, 무빙 속도, 탄속 등 어떠한 부차적 조작 손실도 없는 완벽한 원본 스펙을 보존합니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "30% 감소",
+                camHoriz: "10% 증가 (패널티)",
+                recoilDesc: "격발 시 화면 전체가 위로 요동치며 상승하는 수직 카메라 떨림을 매우 크게 상쇄시켜 사격을 평탄하게 만들지만 좌우 진동은 다소 늘어납니다."
+            },
+            {
+                id: "tbreak",
+                name: "T-BREAK (티브레이크)",
+                category: "머즐",
+                oneLiner: "지향 사격 시의 상하좌우 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 조준 사격 시의 모든 카메라 흔들림과 화면 롤링 진동을 크게 제어함.",
+                advanced: "기동성, 탄속, 사거리에 어떠한 마이너스 요소도 붙지 않는 무제한 파츠입니다. 단 지향 사격 시 화면 흔들림 수치가 최대 15% 증가하는 고유의 패널티가 설계되어 있습니다.",
+                modelVert: "변화 없음",
+                modelHoriz: "변화 없음",
+                camVert: "12% 감소 (조준시) / 10% 증가 (지향시)",
+                camHoriz: "15% 감소 (조준시) / 15% 증가 (지향시)",
+                recoilDesc: "조준 사격 중에 화면 전체가 기우뚱하고 좌우로 회전하듯 뒤틀리는 롤(Z축) 화면 흔들림을 50% 완화하는 비주얼 리코일 종결 머즐입니다."
+            },
+            {
+                id: "xring",
+                name: "X-RING (엑스링)",
+                category: "머즐",
+                oneLiner: "지향사격 확산 감쇠, 지향 사격 회전 반동, 수직 및 수평 카메라 흔들림이 증가하는 대신 모든 조작성과 기동성 패널티 없이 조준 사격 시의 모든 실제 총기 반동을 크게 제어함.",
+                advanced: "조작 속도 및 기동성은 고스란히 유지됩니다. 단 지향사격 확산 감쇠 스탯이 10% 감소하는 유일한 조작적 감점이 적용됩니다.",
+                modelVert: "9~15% 감소",
+                modelHoriz: "9~15% 감소",
+                camVert: "5% 증가 (패널티)",
+                camHoriz: "5% 증가 (패널티)",
+                recoilDesc: "사격 시 화면 흔들림은 약간 늘어나지만, 실제 총구 에임 자체가 사방으로 튀며 명중률을 해치는 총구 물리 반동 자체를 조준 시 무려 15%나 강력하게 제어해 줍니다."
+            },
+            {
+                id: "loudner",
+                name: "LOUDNER (라우드너)",
+                category: "머즐",
+                oneLiner: "탄속, 지향사격 확산 감쇠가 감소하고 카메라의 화면 롤링 흔들림 진동이 크게 증가하는 대신 모든 조작성과 기동성 패널티 없이 제압력 상승과 함께 실제 총기 반동 및 수직/수평 카메라 흔들림을 소폭 제어함.",
+                advanced: "사격 제압력이 25% 상승하여 상대 에임을 흔들어버립니다. 패널티로 탄속이 5% 감소하고, 지향사격 확산 감쇠 수치가 10% 감소합니다. 조작성과 기동성은 순정을 유지합니다.",
+                modelVert: "5~10% 감소",
+                modelHoriz: "5~10% 감소",
+                camVert: "10% 감소",
+                camHoriz: "10% 감소",
+                recoilDesc: "사격 총소리가 매우 크고 투박해지며, 조준 사격 시 화면이 롤링(Z축) 방향으로 60% 대폭 증가하는 패널티가 있지만 실제 수직/수평 반동은 미세하게 억제해 줍니다."
+            },
+            {
+                id: "muzzlebooster",
+                name: "MUZZLE BOOSTER (머부)",
+                category: "머즐",
+                oneLiner: "제압력, 지향사격 성능이 감소하고 물리적인 총기 전후 밀림 반동과 모든 수직/수평 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 연사 속도를 높여 최단 킬 타임을 단축시킴.",
+                advanced: "연사 속도가 향상되어 최단 킬 타임이 한 박자 빠르게 단축되는 강력한 화력 버프를 줍니다. 단 제압력이 50% 급감하고 지향사격 확산도가 넓어지며 확산 감쇠가 10% 감소합니다.",
+                modelVert: "10% 증가 (이동)",
+                modelHoriz: "변화 없음",
+                camVert: "12% 증가 (패널티)",
+                camHoriz: "8% 증가 (패널티)",
+                recoilDesc: "연사 주기가 단축되는 대신 실제 총기가 뒤로 밀려나는 전후 킥 반동(Z축)과 수직/수평 카메라 흔들림이 약 10% 내외로 늘어나 격발감이 다소 사나워집니다."
+            }
+        ];
+
+        // 초기 테마 설정 (로컬 스토리지 또는 브라우저 선호도)
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        const themeBtn = document.getElementById('themeToggleBtn');
+        themeBtn.innerText = currentTheme === 'light' ? '🌙' : '☀️';
+
+        themeBtn.addEventListener('click', () => {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            themeBtn.innerText = currentTheme === 'light' ? '🌙' : '☀️';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // 탭 전환 기능
+        function switchTab(tabName, e) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            }
+
+            if (tabName === 'list') {
+                document.getElementById('listTab').classList.add('active');
+            } else if (tabName === 'compare') {
+                document.getElementById('compareTab').classList.add('active');
+                renderCompare();
+            }
+        }
+
+        // 모달 제어
+        function toggleModal(show) {
+            const modal = document.getElementById('detailModal');
+            if (show) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'detailModal') {
+                toggleModal(false);
+            }
+        }
+
+        // 목록 생성 및 필터 기능
+        const listContainer = document.getElementById('attachmentListContainer');
+        const searchInput = document.getElementById('searchInput');
+        const attachmentOrder = [
+            { key: "muzzle", title: "Barrel · Muzzle", ids: ["flashhider", "compensator", "muzzlebrake", "tbreak", "xring", "halbek", "loudner", "muzzlebooster"] },
+            { key: "suppressor", title: "Barrel · Suppressor", ids: ["duty", "light", "medium", "heavy", "comped", "muffler", "oilfilter"] },
+            { key: "grip", title: "Grip", ids: ["vertical", "angled", "potato", "skeleton", "folding", "stubby", "pistol", "sideways", "chainsaw"] }
+        ];
+        const categoryMap = {
+            "머즐": "muzzle",
+            "소음기": "suppressor",
+            "그립": "grip"
+        };
+        const orderedDataset = attachmentOrder.flatMap(group =>
+            group.ids.map(id => dataset.find(item => item.id === id)).filter(Boolean)
+        );
+        let activeCategory = "all";
+        let activePurpose = "all";
+
+        function escapeHtml(text = "") {
+            return text.replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char]));
+        }
+
+        function highlightText(text = "") {
+            return escapeHtml(text)
+                .replace(/(버프|상승|향상|증가|안정|완화|제어|유지|보존|단축|강화|개선|차단|억제)/g, '<span class="text-benefit">$1</span>')
+                .replace(/(패널티|희생|저하|느려|둔화|노출|지연|급감|불가능|제거)/g, '<span class="text-penalty">$1</span>');
+        }
+
+        function getPurposeTags(item) {
+            const text = `${item.oneLiner} ${item.advanced} ${item.modelVert} ${item.modelHoriz} ${item.camVert} ${item.camHoriz}`;
+            const tags = [];
+            const hasPenalty = /패널티|희생|저하|증가 \(패널티\)|느려|둔화|불가능/.test(text);
+            const hasPower = /탄속|사거리|연사 속도|화력|킬 타임|제압력/.test(text) && /증가|향상|상승|단축|버프/.test(text);
+            if (/반동|흔들림|진동|제어|억제|완화|안정/.test(text)) tags.push({ key: "recoil", label: "반동 제어" });
+            if (/기동성은 순정|이동 속도는 패널티 없이|완벽하게 유지|순정.*유지|기동성.*유지|보존/.test(text)) tags.push({ key: "mobility", label: "기동성 유지" });
+            if (!hasPenalty || /패널티 없이|무손실|완벽히 유지|순정.*유지/.test(text)) tags.push({ key: "lowPenalty", label: "패널티 적음" });
+            if (hasPower) tags.push({ key: "power", label: "화력 보강" });
+            return tags.slice(0, 3);
+        }
+
+        function getCategoryKey(item) {
+            return categoryMap[item.category] || "other";
+        }
+
+        function matchesFilters(item, filterText) {
+            const query = filterText.trim().toLowerCase();
+            const categoryKey = getCategoryKey(item);
+            const inCategory = activeCategory === "all" || activeCategory === categoryKey || (activeCategory === "barrel" && ["muzzle", "suppressor"].includes(categoryKey));
+            const inPurpose = activePurpose === "all" || getPurposeTags(item).some(tag => tag.key === activePurpose);
+            const inSearch = !query || item.name.toLowerCase().includes(query) || item.category.toLowerCase().includes(query) || item.oneLiner.toLowerCase().includes(query);
+            return inCategory && inPurpose && inSearch;
+        }
+
+        function renderList(filterText = searchInput.value) {
+            listContainer.innerHTML = "";
+            const filtered = orderedDataset.filter(item => matchesFilters(item, filterText));
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="glass-panel empty-state">검색 결과가 없습니다.</div>`;
+                return;
+            }
+
+            attachmentOrder.forEach(group => {
+                const items = group.ids
+                    .map(id => filtered.find(item => item.id === id))
+                    .filter(Boolean);
+                if (items.length === 0) return;
+
+                const section = document.createElement('section');
+                section.className = "section-group";
+                section.innerHTML = `
+                    <div class="section-heading">
+                        <h3>${group.title}</h3>
+                        <span class="section-count">${items.length}개</span>
+                    </div>
+                `;
+
+                items.forEach(item => {
+                    const tags = getPurposeTags(item);
+                    const card = document.createElement('div');
+                    card.className = "item-card";
+                    card.onclick = () => openDetail(item);
+                    card.innerHTML = `
+                        <div class="item-card-header">
+                            <span class="item-card-title">${escapeHtml(item.name)}</span>
+                            <span class="badge">${escapeHtml(item.category)}</span>
+                        </div>
+                        <div class="card-tags">
+                            ${tags.map(tag => `<span class="tag-pill">${tag.label}</span>`).join("")}
+                        </div>
+                        <div class="card-footer">상세 보기</div>
+                    `;
+                    section.appendChild(card);
+                });
+
+                listContainer.appendChild(section);
+            });
+        }
+
+        function openDetail(item) {
+            document.getElementById('modalTitle').innerText = item.name;
+            document.getElementById('modalOneLiner').innerHTML = highlightText(item.oneLiner);
+            document.getElementById('modalAdvancedText').innerHTML = highlightText(item.advanced);
+            document.getElementById('tdModelVert').innerText = item.modelVert;
+            document.getElementById('tdModelHoriz').innerText = item.modelHoriz;
+            document.getElementById('tdCamVert').innerText = item.camVert;
+            document.getElementById('tdCamHoriz').innerText = item.camHoriz;
+            document.getElementById('modalRecoilDesc').innerHTML = highlightText(item.recoilDesc);
+            toggleModal(true);
+        }
+
+        function setActiveFilter(containerId, value) {
+            document.querySelectorAll(`#${containerId} .filter-chip`).forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === value);
+            });
+        }
+
+        document.getElementById('categoryFilter').addEventListener('click', (e) => {
+            if (!e.target.classList.contains('filter-chip')) return;
+            activeCategory = e.target.dataset.filter;
+            setActiveFilter('categoryFilter', activeCategory);
+            renderList();
+        });
+
+        document.getElementById('purposeFilter').addEventListener('click', (e) => {
+            if (!e.target.classList.contains('filter-chip')) return;
+            activePurpose = e.target.dataset.filter;
+            setActiveFilter('purposeFilter', activePurpose);
+            renderList();
+        });
+
+        searchInput.addEventListener('input', (e) => renderList(e.target.value));
+
+        // 비교 기능 구현
+        const compSelect1 = document.getElementById('compareSelect1');
+        const compSelect2 = document.getElementById('compareSelect2');
+        const compareTableContainer = document.getElementById('compareTableContainer');
+
+        function initCompareDropdowns() {
+            compSelect1.innerHTML = "";
+            compSelect2.innerHTML = "";
+
+            orderedDataset.forEach((item, index) => {
+                const opt1 = document.createElement('option');
+                opt1.value = item.id;
+                opt1.innerText = item.name;
+                compSelect1.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = item.id;
+                opt2.innerText = item.name;
+                // 기본적으로 두 번째 선택 상자는 다른 항목을 선택하도록 설정
+                if (index === 1) opt2.selected = true;
+                compSelect2.appendChild(opt2);
+            });
+
+            compSelect1.addEventListener('change', renderCompare);
+            compSelect2.addEventListener('change', renderCompare);
+        }
+
+        // 특정 성능 데이터의 유불리를 판별해 글래스 배지를 부착하는 헬퍼 함수
+        function getCompareBadge(value) {
+            if (value.includes("감소") || value.includes("안정")) {
+                return `<span class="compare-badge-up">${value}</span>`;
+            } else if (value.includes("증가") || value.includes("패널티") || value.includes("저하")) {
+                return `<span class="compare-badge-down">${value}</span>`;
+            } else {
+                return `<span>${value}</span>`;
+            }
+        }
+
+        function renderCompare() {
+            const id1 = compSelect1.value;
+            const id2 = compSelect2.value;
+
+            const item1 = orderedDataset.find(i => i.id === id1);
+            const item2 = orderedDataset.find(i => i.id === id2);
+
+            if (!item1 || !item2) return;
+
+            compareTableContainer.innerHTML = `
+                <table class="stat-table" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>성능 지표</th>
+                            <th>${item1.name}</th>
+                            <th>${item2.name}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="stat-row-title">모델 수직 (총구)</td>
+                            <td>${getCompareBadge(item1.modelVert)}</td>
+                            <td>${getCompareBadge(item2.modelVert)}</td>
+                        </tr>
+                        <tr>
+                            <td class="stat-row-title">모델 수평 (총구)</td>
+                            <td>${getCompareBadge(item1.modelHoriz)}</td>
+                            <td>${getCompareBadge(item2.modelHoriz)}</td>
+                        </tr>
+                        <tr>
+                            <td class="stat-row-title">카메라 수직 (화면)</td>
+                            <td>${getCompareBadge(item1.camVert)}</td>
+                            <td>${getCompareBadge(item2.camVert)}</td>
+                        </tr>
+                        <tr>
+                            <td class="stat-row-title">카메라 수평 (화면)</td>
+                            <td>${getCompareBadge(item1.camHoriz)}</td>
+                            <td>${getCompareBadge(item2.camHoriz)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="glass-panel markdown-block" style="margin-top: 12px; padding: 12px;">
+                    <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item1.name} 성향</div>
+                    <div>${highlightText(item1.advanced)}</div>
+                </div>
+                <div class="glass-panel markdown-block" style="margin-top: 10px; padding: 12px;">
+                    <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item2.name} 성향</div>
+                    <div>${highlightText(item2.advanced)}</div>
+                </div>
+            `;
+        }
+
+        // 좌우 드래그 슬라이드(스크롤) 기능 활성화
+        function initDragScroll(selector) {
+            const sliders = document.querySelectorAll(selector);
+            sliders.forEach(slider => {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                slider.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    slider.style.cursor = 'grabbing';
+                    startX = e.pageX - slider.offsetLeft;
+                    scrollLeft = slider.scrollLeft;
+                });
+
+                slider.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    slider.style.cursor = 'grab';
+                });
+
+                slider.addEventListener('mouseup', () => {
+                    isDown = false;
+                    slider.style.cursor = 'grab';
+                });
+
+                slider.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - slider.offsetLeft;
+                    const walk = (x - startX) * 1.5; // 스크롤 감도
+                    slider.scrollLeft = scrollLeft - walk;
+                });
+            });
+        }
+
+        // 애플리케이션 시작점
+        window.onload = () => {
+            renderList();
+            initCompareDropdowns();
+            initDragScroll('.filter-row');
+        };
+    </script>
+</body>
+
+</html>
