@@ -448,6 +448,8 @@
             padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border-glass);
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
 
         .stat-table th {
@@ -501,15 +503,106 @@
             gap: 10px;
         }
 
-        .glass-select {
+        /* 커스텀 셀렉트 드롭다운 스타일 */
+        .custom-select-wrapper {
+            position: relative;
             width: 50%;
+            user-select: none;
+        }
+
+        .custom-select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background: var(--bg-glass);
             border: 1px solid var(--border-glass);
-            padding: 10px;
+            padding: 10px 14px;
             border-radius: 12px;
             color: var(--text-color);
             font-size: 0.9rem;
-            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .custom-select-trigger::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid var(--text-color);
+            border-bottom: 2px solid var(--text-color);
+            transform: rotate(45deg);
+            margin-bottom: 2px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger::after {
+            transform: rotate(-135deg);
+            margin-bottom: -2px;
+        }
+
+        .custom-options {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 24px var(--shadow-glass);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.25s cubic-bezier(0, 0, 0.2, 1);
+            max-height: 250px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        [data-theme="dark"] .custom-options {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .custom-option {
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .custom-option:hover {
+            background: rgba(92, 107, 192, 0.15);
+        }
+
+        .custom-option.selected {
+            background: rgba(92, 107, 192, 0.25);
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .custom-options::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .custom-options::-webkit-scrollbar-thumb {
+            background: var(--border-glass);
+            border-radius: 999px;
         }
 
         .compare-badge-up {
@@ -631,8 +724,16 @@
             <div class="glass-panel compare-grid">
                 <h2>실시간 다각 비교</h2>
                 <div class="selector-box">
-                    <select id="compareSelect1" class="glass-select"></select>
-                    <select id="compareSelect2" class="glass-select"></select>
+                    <!-- 커스텀 드롭다운 1 -->
+                    <div class="custom-select-wrapper" id="customSelect1Wrapper">
+                        <div class="custom-select-trigger" id="customSelect1Trigger">선택 1</div>
+                        <div class="custom-options" id="customSelect1Options"></div>
+                    </div>
+                    <!-- 커스텀 드롭다운 2 -->
+                    <div class="custom-select-wrapper" id="customSelect2Wrapper">
+                        <div class="custom-select-trigger" id="customSelect2Trigger">선택 2</div>
+                        <div class="custom-options" id="customSelect2Options"></div>
+                    </div>
                 </div>
 
                 <!-- 비교용 렌더링 테이블 -->
@@ -1183,30 +1284,102 @@
         searchInput.addEventListener('input', (e) => renderList(e.target.value));
 
         // 비교 기능 구현
-        const compSelect1 = document.getElementById('compareSelect1');
-        const compSelect2 = document.getElementById('compareSelect2');
+        let selectedId1 = "duty";
+        let selectedId2 = "light";
+
         const compareTableContainer = document.getElementById('compareTableContainer');
 
+        function getCompatibleGroup(item) {
+            if (!item) return "";
+            if (item.category === "소음기" || item.category === "머즐") {
+                return "barrel";
+            }
+            if (item.category === "그립") {
+                return "grip";
+            }
+            return "other";
+        }
+
         function initCompareDropdowns() {
-            compSelect1.innerHTML = "";
-            compSelect2.innerHTML = "";
+            const trigger1 = document.getElementById('customSelect1Trigger');
+            const trigger2 = document.getElementById('customSelect2Trigger');
+            const wrapper1 = document.getElementById('customSelect1Wrapper');
+            const wrapper2 = document.getElementById('customSelect2Wrapper');
 
-            orderedDataset.forEach((item, index) => {
-                const opt1 = document.createElement('option');
-                opt1.value = item.id;
-                opt1.innerText = item.name;
-                compSelect1.appendChild(opt1);
-
-                const opt2 = document.createElement('option');
-                opt2.value = item.id;
-                opt2.innerText = item.name;
-                // 기본적으로 두 번째 선택 상자는 다른 항목을 선택하도록 설정
-                if (index === 1) opt2.selected = true;
-                compSelect2.appendChild(opt2);
+            trigger1.addEventListener('click', (e) => {
+                e.stopPropagation();
+                wrapper1.classList.toggle('open');
+                wrapper2.classList.remove('open');
             });
 
-            compSelect1.addEventListener('change', renderCompare);
-            compSelect2.addEventListener('change', renderCompare);
+            trigger2.addEventListener('click', (e) => {
+                e.stopPropagation();
+                wrapper2.classList.toggle('open');
+                wrapper1.classList.remove('open');
+            });
+
+            document.addEventListener('click', () => {
+                wrapper1.classList.remove('open');
+                wrapper2.classList.remove('open');
+            });
+
+            updateCustomDropdowns();
+        }
+
+        function updateCustomDropdowns() {
+            const item1 = orderedDataset.find(i => i.id === selectedId1);
+            const item2 = orderedDataset.find(i => i.id === selectedId2);
+
+            const group1 = getCompatibleGroup(item1);
+
+            document.getElementById('customSelect1Trigger').innerText = item1 ? item1.name : "선택 1";
+            document.getElementById('customSelect2Trigger').innerText = item2 ? item2.name : "선택 2";
+
+            // Select 1 옵션 생성 (전체 아이템 제공)
+            const options1Container = document.getElementById('customSelect1Options');
+            options1Container.innerHTML = "";
+            orderedDataset.forEach(item => {
+                const optEl = document.createElement('div');
+                optEl.className = `custom-option ${item.id === selectedId1 ? 'selected' : ''}`;
+                optEl.innerText = item.name;
+                optEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedId1 = item.id;
+                    
+                    // 호환 가능 그룹 체크하여 강제 전환
+                    const newGroup1 = getCompatibleGroup(item);
+                    const currentItem2 = orderedDataset.find(i => i.id === selectedId2);
+                    const group2 = getCompatibleGroup(currentItem2);
+                    
+                    if (newGroup1 !== group2) {
+                        const fallbackItem = orderedDataset.find(i => getCompatibleGroup(i) === newGroup1 && i.id !== item.id);
+                        selectedId2 = fallbackItem ? fallbackItem.id : item.id;
+                    }
+                    
+                    document.getElementById('customSelect1Wrapper').classList.remove('open');
+                    updateCustomDropdowns();
+                    renderCompare();
+                });
+                options1Container.appendChild(optEl);
+            });
+
+            // Select 2 옵션 생성 (Select 1과 동일 그룹만 제공하여 다른 종류 비교 원천 차단)
+            const options2Container = document.getElementById('customSelect2Options');
+            options2Container.innerHTML = "";
+            const compatibleItems = orderedDataset.filter(item => getCompatibleGroup(item) === group1);
+            compatibleItems.forEach(item => {
+                const optEl = document.createElement('div');
+                optEl.className = `custom-option ${item.id === selectedId2 ? 'selected' : ''}`;
+                optEl.innerText = item.name;
+                optEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedId2 = item.id;
+                    document.getElementById('customSelect2Wrapper').classList.remove('open');
+                    updateCustomDropdowns();
+                    renderCompare();
+                });
+                options2Container.appendChild(optEl);
+            });
         }
 
         // 특정 성능 데이터의 유불리를 판별해 글래스 배지를 부착하는 헬퍼 함수
@@ -1221,8 +1394,8 @@
         }
 
         function renderCompare() {
-            const id1 = compSelect1.value;
-            const id2 = compSelect2.value;
+            const id1 = selectedId1;
+            const id2 = selectedId2;
 
             const item1 = orderedDataset.find(i => i.id === id1);
             const item2 = orderedDataset.find(i => i.id === id2);
@@ -1272,7 +1445,7 @@
             `;
         }
 
-        // 좌우 드래그 슬라이드(스크롤) 기능 활성화
+        // 좌우 드래그 및 마우스 휠 슬라이드(스크롤) 기능 활성화
         function initDragScroll(selector) {
             const sliders = document.querySelectorAll(selector);
             sliders.forEach(slider => {
@@ -1303,6 +1476,14 @@
                     const x = e.pageX - slider.offsetLeft;
                     const walk = (x - startX) * 1.5; // 스크롤 감도
                     slider.scrollLeft = scrollLeft - walk;
+                });
+
+                // 마우스 휠로 좌우 슬라이드(스크롤) 가능하게 구현
+                slider.addEventListener('wheel', (e) => {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        slider.scrollLeft += e.deltaY * 0.8; // 부드러운 스크롤 감도
+                    }
                 });
             });
         }
