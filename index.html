@@ -871,34 +871,32 @@
                 <h2 id="modalTitle" style="font-weight: 800; color: var(--card-title);">부착물 명칭</h2>
                 <button class="close-btn" onclick="toggleModal(false)">&times;</button>
             </div>
-            <div id="modalOneLiner" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">한 줄 요약</div>
+            <div id="modalOneLiner"
+                style="color: var(--text-color); font-weight: 800; line-height: 1.4; margin-top: 6px; margin-bottom: 6px; font-size: 0.95rem;">
+                한 줄 요약</div>
+
+            <div id="modalNoiseRange"
+                style="display: none; flex-direction: column; gap: 4px; background: var(--badge-green); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-glass); margin-top: 8px;">
+                <div
+                    style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--benefit-text);">
+                    <span style="font-size: 1.1rem;">🔕</span>
+                    <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">소음 감지 범위:</span>
+                    <span id="modalNoiseRangeVal" style="font-weight: 800;"></span>
+                </div>
+                <div id="modalNoiseDesc"
+                    style="font-size: 0.8rem; color: var(--text-color); opacity: 0.9; line-height: 1.4; padding-left: 24px;">
+                </div>
+            </div>
 
             <div class="glass-panel markdown-block" style="padding: 12px; margin-top: 5px;">
                 <p id="modalAdvancedText"></p>
             </div>
 
             <div class="section-title">상세 격발 데이터 (Layer 1)</div>
-            <table class="stat-table">
-                <thead>
-                    <tr>
-                        <th>조절 스탯</th>
-                        <th>수직 영역 (Pitch)</th>
-                        <th>수평 영역 (Yaw)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="stat-row-title">모델 반동 (총구)</td>
-                        <td id="tdModelVert">0%</td>
-                        <td id="tdModelHoriz">0%</td>
-                    </tr>
-                    <tr>
-                        <td class="stat-row-title">카메라 반동 (화면)</td>
-                        <td id="tdCamVert">0%</td>
-                        <td id="tdCamHoriz">0%</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="glass-panel" id="modalStatBars"
+                style="padding: 14px; margin-top: 5px; display: flex; flex-direction: column; gap: 12px;">
+                <!-- JavaScript를 통해 동적 렌더링 -->
+            </div>
 
             <div class="markdown-block" id="modalRecoilDesc">격발 성향 설명</div>
         </div>
@@ -911,7 +909,9 @@
                 tags: [],
                 name: "DUTY SUPPRESSOR",
                 category: "소음기",
-                oneLiner: "조작 속도와 기동성을 감소시키는 대신, 탄속과 사거리를 상승시키고 전체 반동 및 화면 진동을 고르게 제어하는 밸런스형 소음기.",
+                noiseRange: "50스터드 밖 차단",
+                noiseDesc: "가장 무난하고 대중적인 소음 차단 범위를 보여주는 표준적인 사양입니다.",
+                oneLiner: "조작 속도 및 이동 속도 감소 대신 균형 잡힌 반동 및 화면 흔들림 감소와 표준적인 레이더 은폐 효과 및 탄속 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "소음 효과와 함께 탄속이 2% 증가하고, 대미지 사거리 역시 2% 증가하는 버프를 받습니다. 이동 및 조준 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 모든 조작 속도가 10% 감소하며, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
                 modelVert: "10% 감소",
                 modelHoriz: "10% 감소",
@@ -924,7 +924,9 @@
                 tags: ["mobility", "lowPenalty"],
                 name: "LIGHT SUPPRESSOR",
                 category: "소음기",
-                oneLiner: "반동 감소율은 작지만, 패널티를 최소화하여 순정 총기 고유의 빠른 무빙 속도를 완벽하게 보존하면서 탄속과 사거리를 미세하게 늘려주는 소음기.",
+                noiseRange: "70스터드 밖 차단",
+                noiseDesc: "총기 고유의 빠른 기동성을 완벽하게 보존하는 유틸리티적 강점이 있는 대신, 레이더 차단 성능 자체는 비교적 좁은 편입니다.",
+                oneLiner: "미세한 조작 속도 감소 대신 기동성 보존과 가벼운 반동 감소 및 레이더 은폐 효과를 얻는 맞교환 구조에 적합.",
                 advanced: "소음 효과와 함께 탄속이 1.5% 증가하고, 대미지 사거리가 1.5% 증가하는 미세한 버프를 받습니다. 흔들림(Sway)은 2.5% 안정되나 조작 속도가 2.5% 아주 소폭 감소하며, 기본 및 조준 이동 속도는 패널티 없이 그대로 유지됩니다.",
                 modelVert: "5% 감소",
                 modelHoriz: "5% 감소",
@@ -937,7 +939,9 @@
                 tags: [],
                 name: "MEDIUM SUPPRESSOR",
                 category: "소음기",
-                oneLiner: "조준 속도와 이동 속도를 가볍게 희생하는 대신 탄속과 대미지 사거리를 2.5% 늘리고 수직/수평 물리 반동과 화면 흔들림을 고르게 완화하는 소음기.",
+                noiseRange: "60스터드 밖 차단",
+                noiseDesc: "듀티 소음기보다 차단 범위는 약간 더 넓지만 여전히 적절한 수준의 소음 효과를 보여줍니다.",
+                oneLiner: "조작 속도 및 이동 속도 감소 대신 가벼운 반동 및 화면 흔들림 감소와 레이더 은폐 효과 및 탄속 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "소음 효과와 함께 탄속이 2.5% 증가하고, 대미지 사거리가 2.5% 증가하는 버프를 받습니다. 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 조작 속도가 7.5% 감소하며, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
                 modelVert: "5% 감소",
                 modelHoriz: "5% 감소",
@@ -950,7 +954,9 @@
                 tags: ["recoil", "power"],
                 name: "HEAVY SUPPRESSOR",
                 category: "소음기",
-                oneLiner: "조준 및 이동 속도를 무겁게 희생하는 패널티를 대가로, 소음 효과를 극대화하고 탄속과 사거리를 크게 보강하며 모든 물리 반동과 흔들림을 강력히 억제하는 소음기.",
+                noiseRange: "30스터드 밖 차단",
+                noiseDesc: "조작성과 이동 속도를 가장 많이 희생하는 무거운 패널티를 가진 대신, 매우 조용하고 우수한 암살용 은폐력을 보장합니다.",
+                oneLiner: "큰 기동성 및 조작 속도 감소 대신 반동 및 화면 흔들림 감소와 우수한 레이더 은폐 효과 및 탄속 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "소음 효과와 함께 탄속이 5% 증가하고, 대미지 사거리 역시 5% 증가하는 탄도학 버프를 제공합니다. 조준 흔들림(Sway) 또한 10% 안정됩니다. 다만 패널티로 조준 속도를 포함한 조작 속도가 10% 감소하고, 기본 이동 속도가 7.5%, 조준 시 이동 속도가 12.5% 감소합니다.",
                 modelVert: "15% 감소",
                 modelHoriz: "15% 감소",
@@ -963,7 +969,9 @@
                 tags: ["recoil"],
                 name: "COMPED SUPPRESSOR",
                 category: "소음기",
-                oneLiner: "소음 범위가 좁은 아쉬움이 있으나, 탄속과 사거리 손실이 없으며 화면 진동과 수평/수직 물리 반동을 대폭 억제해 주는 성능형 소음기.",
+                noiseRange: "100스터드 밖 차단",
+                noiseDesc: "탄속과 사거리 손실이 전혀 없고 반동 제어력이 높지만, 소음 전파 범위가 가장 넓어 소음기 카테고리 중 은폐력은 가장 떨어집니다.",
+                oneLiner: "기동성 및 조작 속도 감소와 넓은 레이더 노출 범위 대신 강력한 반동 및 화면 흔들림 감소와 순정 탄속 및 사거리 보존을 취하는 맞교환 구조에 적합.",
                 advanced: "소음 범위가 다른 소음기들에 비해 다소 좁은 편입니다. 대신 탄속과 대미지 사거리가 패널티 없이 완전히 유지됩니다. 흔들림(Sway)은 2.5% 안정되나 조작 속도가 7.5% 감소하고, 기본 이동 속도가 2.5%, 조준 시 이동 속도가 8% 감소합니다.",
                 modelVert: "15% 감소",
                 modelHoriz: "15% 감소",
@@ -976,7 +984,9 @@
                 tags: ["recoil"],
                 name: "MUFFLER",
                 category: "소음기",
-                oneLiner: "소음 효과가 없고 연사 속도가 감소해 최단 킬 타임이 지연되지만, 반동 회복 속도를 늦추며 수평 반동을 크게, 화면 진동을 고르게 완화하는 감속 머즐.",
+                noiseRange: "Unsuppressed (소음 효과 없음)",
+                noiseDesc: "머즐 카테고리 고유의 반동 및 연사력 제어 특성상 총소리의 톤만 변할 뿐, 레이더 노출은 순정과 동일하게 100% 노출됩니다.",
+                oneLiner: "연사 속도 및 탄속 감소와 레이더 은폐 효과 부재 대신 회전 물리 반동 및 화면 흔들림 감소를 가져가는 맞교환 구조에 적합.",
                 advanced: "소음 처리 기능이 작동하지 않아 레이더에 노출됩니다. 연사속도(RPM)가 감소하여 최단 킬 타임(TTK)이 지연되는 직접 패널티가 있고 탄속이 10% 감소합니다. 조작 속도는 5% 감소하며 사거리는 순정 상태를 유지합니다.",
                 modelVert: "15% 감소 (회전)",
                 modelHoriz: "10% 감소 (회전)",
@@ -989,7 +999,9 @@
                 tags: ["recoil"],
                 name: "OIL FILTER",
                 category: "소음기",
-                oneLiner: "탄속과 조작 속도를 희생하는 대신, 미니맵 노출을 완전 차단하는 최고 수준의 소음 성능과 함께 물리적인 수평/수직 반동을 대폭 제어하는 소음기.",
+                noiseRange: "5스터드 밖 차단",
+                noiseDesc: "사실상 완전 무음입니다. 코앞에 붙어있는 초근접 상황이 아니면 격발 시 적 레이더에 절대 감지되지 않는 최강의 은폐 성능을 보입니다.",
+                oneLiner: "탄속 저하 및 조작 속도 감소 대신 우수한 레이더 은폐 효과와 반동 복구력 향상을 취하는 맞교환 구조에 적합.",
                 advanced: "단 5스터드 밖에서 미노출되어 매우 강력한 소음 은폐력을 제공합니다. 대신 탄속이 10% 감소하고 조작 속도 역시 10% 일괄 감소하는 패널티가 있습니다. 기동성(이동 속도)과 대미지 사거리는 패널티 없이 순정 상태를 유지합니다.",
                 modelVert: "9~20% 감소",
                 modelHoriz: "9~20% 감소",
@@ -1002,7 +1014,7 @@
                 tags: [],
                 name: "ANGLED GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 무빙 조작성, 수직 카메라 반동이 저하되는 대신 수평 회전 반동과 수평 카메라 반동을 제어함.",
+                oneLiner: "수직 반동은 쏠만하지만 좌우로 무작위로 튀는 수평 회전 반동이 거슬리는 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하여 무빙 조작성이 소폭 둔화됩니다. 또한 조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소합니다. 탄속, 사거리, 조준선 흔들림(Sway) 스탯은 모두 패널티 없이 완벽하게 유지됩니다.",
                 modelVert: "17% 감소 (회전)",
                 modelHoriz: "9% 감소",
@@ -1015,7 +1027,7 @@
                 tags: [],
                 name: "POTATO GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 총기 꺼내는 속도, 이동 중 총기 흔들림이 저하되는 대신 물리적으로 밀리는 반동과 카메라 흔들림을 제어함.",
+                oneLiner: "격발 시 총 자체가 뒤로 크게 밀리는 전후 반동과 화면 진동을 균형 있게 억제하고 싶은 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하여 조작성이 소폭 둔해지며, 이동 중 조준 흔들림 스탯이 일괄 5% 증가하는 패널티가 적용됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
                 modelVert: "9% 감소 (이동)",
                 modelHoriz: "9% 감소 (이동)",
@@ -1028,7 +1040,7 @@
                 tags: ["recoil"],
                 name: "FOLDING GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 총기 꺼내는 속도, 이동 중 총기 흔들림이 저하되는 대신 조준 시 이동 속도 저하 없이 전반적인 물리 반동과 화면 흔들림을 제어함.",
+                oneLiner: "수직/수평 물리 반동과 화면 요동이 모두 심해 전체적인 안정성을 대폭 올리고 싶은 총기에 적합.",
                 advanced: "조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소하고, 이동 중 조준 흔들림이 일괄 10% 증가하는 패널티를 가집니다. 다만 조준 시 이동 속도를 희생하지 않고 순정 수치를 그대로 유지하여 기동성을 보존합니다. 탄속 및 대미지 사거리 역시 순정을 유지합니다.",
                 modelVert: "9% 감소",
                 modelHoriz: "9% 감소",
@@ -1041,7 +1053,7 @@
                 tags: ["recoil"],
                 name: "STUBBY GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 무빙 조작성, 이동 중 총기 흔들림이 저하되는 대신 카메라 흔들림은 유지하고 총구가 직접 튀는 물리 반동만 제어함.",
+                oneLiner: "화면이 떨리는 비주얼 반동보다는 실제 탄착군이 퍼지는 물리적인 총구 들림을 확실히 좁히고 싶은 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하며, 이동 중 조준선 흔들림 스탯이 일괄 17% 개선되어 안정화됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
                 modelVert: "9% 감소",
                 modelHoriz: "9% 감소",
@@ -1054,7 +1066,7 @@
                 tags: ["recoil"],
                 name: "ROMANIAN GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 조준 시 이동 속도, 수직 카메라 반동이 크게 저하되는 대신 수평 카메라 흔들림을 포함한 물리적 반동을 제어함.",
+                oneLiner: "정조준 속도와 기동성을 크게 포기하더라도 화면이 좌우로 사정없이 튀는 비주얼 반동을 극단적으로 지우고 싶은 총기에 적합.",
                 advanced: "정조준 사격 시 이동 속도가 무려 17% 대폭 감소하여 무빙 기동성이 무거워집니다. 조준 속도를 포함한 총기 조작 속도 역시 일괄 9% 감소하여 총기 반응성이 느려지지만, 무빙 시 조준선 흔들림 스탯은 일괄 17% 안정됩니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelVert: "9% 감소",
                 modelHoriz: "9% 감소",
@@ -1067,7 +1079,7 @@
                 tags: [],
                 name: "SIDE WAYS GRIP",
                 category: "그립",
-                oneLiner: "조준 속도, 조작 성능, 물리적 회전 반동이 저하되는 대신 수직 및 롤 카메라 흔들림을 억제하고 지향사격 명중률을 높임.",
+                oneLiner: "정조준보다는 지향 사격을 주로 사용하며 격발 시 화면의 롤링(Z축 뒤틀림) 진동이 강한 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 좁아지고 지향사격 복원 속도가 10% 빨라져 명중률이 강화되며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 정조준 사격 중 이동 속도가 17% 대폭 감소하고 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelVert: "5% 증가 (패널티)",
                 modelHoriz: "5% 증가 (패널티)",
@@ -1080,7 +1092,7 @@
                 tags: [],
                 name: "CHAINSAW GRIP",
                 category: "그립",
-                oneLiner: "조준경을 통한 정조준이 불가능해지고 조작 속도와 기동성이 저하되는 대신 지향사격 집탄율, 복원력, 카메라 흔들림을 제어함.",
+                oneLiner: "정조준을 완전히 포기하고 넓은 시야와 빠른 연사력으로 지향 사격만 난사하는 경기관총(LMG) 등의 빌드에 적합.",
                 advanced: "정조준(ADS) 기능 자체가 제거되어 지향사격 구도로 고정됩니다. 지향사격 확산도가 14% 좁아지고 복원 속도 및 복원력이 일괄 20% 크게 상승합니다. 다만 조작 속도가 일괄 17% 크게 감소하고 조준 시 이동 속도 역시 17% 감소합니다. 이동 사격 시 흔들림은 17% 안정되며 탄속 및 사거리는 순정을 유지합니다.",
                 modelVert: "9% 감소 (회전) / 10% 증가 (이동)",
                 modelHoriz: "9% 감소 (회전) / 10% 증가 (이동)",
@@ -1093,7 +1105,7 @@
                 tags: ["mobility", "lowPenalty"],
                 name: "VERTICAL GRIP",
                 category: "그립",
-                oneLiner: "조준 속도가 미세하게 감소하고 반동 스탯은 변하지 않는 대신 지향사격 정확도와 이동 시 조준선 흔들림을 제어함.",
+                oneLiner: "반동 제어 스탯은 필요 없고, 무빙 샷 시의 조준선 흔들림 안정성과 지향 사격 복원력을 챙겨야 하는 런앤건 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 좁아지고 지향 복원 속도가 10% 빠르게 회복됩니다. 또한 이동 중 조준 흔들림(Walk Sway)이 33% 대폭 감소하여 무빙 안정성이 우수합니다. 조작 속도는 약 4.8% 미세하게 감소하며 기본 및 조준 이동 속도, 대미지 사거리는 순정을 유지합니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1106,7 +1118,7 @@
                 tags: ["mobility"],
                 name: "PISTOL GRIP",
                 category: "그립",
-                oneLiner: "조준 속도를 포함한 전반적인 조작 속도가 느려지고 반동 스탯은 변하지 않는 대신 지향사격 성능과 이동 중 조준선 흔들림을 제어함.",
+                oneLiner: "정조준보단 지향 사격을 지향하며, 무빙 격발 시 에임이 벌어지는 폭을 최대한 억제하고 싶은 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 정돈되고 복원력이 10% 증가하며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 조준 시 이동 속도가 9% 감소하고 조준 속도를 포함한 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1119,7 +1131,7 @@
                 tags: ["mobility"],
                 name: "SKELETON GRIP",
                 category: "그립",
-                oneLiner: "조준 시 이동 속도가 감소하고 반동은 순정 그대로인 대신 조준 속도, 질주 전환 속도, 총기 꺼내는 속도를 제어함.",
+                oneLiner: "반동은 잘 잡혀 있어 제어할 필요가 없고, 근접전에서 조준 및 반응 속도를 극한으로 끌어올리고 싶은 총기에 적합.",
                 advanced: "조준 속도 및 질주 전환 속도가 모두 15% 증가하고 총기를 꺼내는 속도 역시 10% 단축되어 반응성이 민첩해집니다. 추가로 이동 사격 시 흔들림이 13% 안정되지만, 패널티로 조준 시 이동 속도가 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1132,7 +1144,7 @@
                 tags: ["mobility", "lowPenalty"],
                 name: "FLASH HIDER",
                 category: "머즐",
-                oneLiner: "지향사격 확산 감쇠가 저하되는 대신 총구 화염을 제거하고 모든 지향 및 조준 카메라 흔들림 반동을 제어함.",
+                oneLiner: "총구 화염이 에임을 크게 가려 사격 피아가 어렵거나, 패널티 없이 가벼운 비주얼 흔들림을 다잡고 싶을 때 적합.",
                 advanced: "격발 시의 총구 화염을 완벽히 차단하여 조준점을 맑게 해 줍니다. 조작성 및 기동성 스탯이 완벽히 유지되는 무손실 파츠이나, 단 지향사격 확산 감쇠가 5% 소폭 감소합니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1145,7 +1157,7 @@
                 tags: ["recoil"],
                 name: "COMPENSATOR",
                 category: "머즐",
-                oneLiner: "수직 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 수평 카메라 흔들림 반동을 조준 및 지향 사격 시 크게 제어함.",
+                oneLiner: "수직 반동은 쏘기 편하지만 화면이 좌우로 불규칙하게 요동쳐 추적이 힘든 수평 반동 위주 총기에 적합.",
                 advanced: "조작 속도, 기동성, 탄속, 사거리 등 어떠한 조작 및 탄도학적 패널티도 존재하지 않는 완전 무제한 순정 스펙을 지닙니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1158,7 +1170,7 @@
                 tags: ["recoil"],
                 name: "MUZZLE BRAKE",
                 category: "머즐",
-                oneLiner: "수평 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 수직 카메라 흔들림 반동을 조준 및 지향 사격 시 크게 제어함.",
+                oneLiner: "좌우 흔들림은 적으나 사격 시 화면 전체가 위로 가파르게 튀어 오르는 수직 반동 위주 총기(예: M16계열, 단발 광클총 등)에 적합.",
                 advanced: "컴펜세이터와 동일하게 조작 속도, 무빙 속도, 탄속 등 어떠한 부차적 조작 손실도 없는 완벽한 원본 스펙을 보존합니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1171,7 +1183,7 @@
                 tags: ["recoil"],
                 name: "T-BREAK",
                 category: "머즐",
-                oneLiner: "지향 사격 시의 상하좌우 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 조준 사격 시의 모든 카메라 흔들림과 화면 롤링 진동을 크게 제어함.",
+                oneLiner: "수직/수평 화면 흔들림을 모두 제어하고 싶지만, 머즐브레이크나 컴펜세이터 고유의 반대 방향 반동 증가 패널티는 완전히 피하고 싶을 때 적합.",
                 advanced: "기동성, 탄속, 사거리에 어떠한 마이너스 요소도 붙지 않는 무제한 파츠입니다. 단 지향 사격 시 화면 흔들림 수치가 최대 15% 증가하는 고유의 패널티가 설계되어 있습니다.",
                 modelVert: "변화 없음",
                 modelHoriz: "변화 없음",
@@ -1184,7 +1196,7 @@
                 tags: ["recoil"],
                 name: "X-RING",
                 category: "머즐",
-                oneLiner: "지향사격 확산 감쇠, 지향 사격 회전 반동, 수직 및 수평 카메라 흔들림이 증가하는 대신 모든 조작성과 기동성 패널티 없이 조준 사격 시의 모든 실제 총기 반동을 크게 제어함.",
+                oneLiner: "화면 흔들림은 상관없으니 오직 탄착군 자체를 흩뜨리는 물리적인 총구 반동 패턴 크기 자체를 대폭 좁히고 싶을 때 적합.",
                 advanced: "조작 속도 및 기동성은 고스란히 유지됩니다. 단 지향사격 확산 감쇠 스탯이 10% 감소하는 유일한 조작적 감점이 적용됩니다.",
                 modelVert: "9~15% 감소",
                 modelHoriz: "9~15% 감소",
@@ -1197,7 +1209,7 @@
                 tags: [],
                 name: "HALBEK DEVICE",
                 category: "머즐",
-                oneLiner: "지향사격 정확도 성능, 조준 사격 전후 밀림 반동, 조준 시 화면 회전 흔들림이 악화되고 지향 사격 회전 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 모든 조준 및 지향 사격 시의 수직 및 수평 반동 방향을 상하좌우 반대로 반전시킴.",
+                oneLiner: "수직 반동이 너무 심해 격발 시 에임을 위로 올리는 변칙 플레이나 고유의 반동 방향 변환을 활용하고 싶을 때 적합.",
                 advanced: "지향사격 복원 속도가 10% 감소하고, 지향사격 확산 감쇠가 20% 크게 감소하는 지향 패널티가 있습니다. 대신 조준 속도를 포함한 조작성, 기동성, 탄속, 사거리 등 다른 모든 조작 스탯은 패널티 없이 순정을 그대로 유지합니다.",
                 modelVert: "방향 반전 / 조준 수직 25% 감소",
                 modelHoriz: "방향 반전",
@@ -1210,7 +1222,7 @@
                 tags: [],
                 name: "LOUDNER",
                 category: "머즐",
-                oneLiner: "탄속, 지향사격 확산 감쇠가 감소하고 카메라의 화면 롤링 흔들림 진동이 크게 증가하는 대신 모든 조작성과 기동성 패널티 없이 제압력 상승과 함께 실제 총기 반동 및 수직/수평 카메라 흔들림을 소폭 제어함.",
+                oneLiner: "적의 시야를 강하게 흔드는 강한 제압력이 필요하고 반동 패턴보다는 사격 소리 극대화 및 변칙 플레이를 원할 때 적합.",
                 advanced: "사격 제압력이 25% 상승하여 상대 에임을 흔들어버립니다. 패널티로 탄속이 5% 감소하고, 지향사격 확산 감쇠 수치가 10% 감소합니다. 조작성과 기동성은 순정을 유지합니다.",
                 modelVert: "5~10% 감소",
                 modelHoriz: "5~10% 감소",
@@ -1223,7 +1235,7 @@
                 tags: ["power"],
                 name: "MUZZLE BOOSTER",
                 category: "머즐",
-                oneLiner: "제압력, 지향사격 성능이 감소하고 물리적인 총기 전후 밀림 반동과 모든 수직/수평 카메라 흔들림 반동이 증가하는 대신 모든 조작성과 기동성 패널티 없이 연사 속도를 높여 최단 킬 타임을 단축시킴.",
+                oneLiner: "반동 증가 패널티를 감수하고라도 연사 속도(RPM)를 극대화해 최단 킬 타임(TTK) 화력을 극한으로 끌어올리고 싶을 때 적합.",
                 advanced: "연사 속도가 향상되어 최단 킬 타임이 한 박자 빠르게 단축되는 강력한 화력 버프를 줍니다. 단 제압력이 50% 급감하고 지향사격 확산도가 넓어지며 확산 감쇠가 10% 감소합니다.",
                 modelVert: "10% 증가 (이동)",
                 modelHoriz: "변화 없음",
@@ -1392,14 +1404,98 @@
             });
         }
 
+        function parseRecoilValue(text) {
+            if (!text || text.includes("변화 없음")) return 0;
+
+            // Check if it's a range like "10~20%"
+            const rangeMatch = text.match(/(\d+(?:\.\d+)?)\s*~\s*(\d+(?:\.\d+)?)/);
+            let value = 0;
+            if (rangeMatch) {
+                value = (parseFloat(rangeMatch[1]) + parseFloat(rangeMatch[2])) / 2;
+            } else {
+                const percentMatch = text.match(/(\d+(?:\.\d+)?)/);
+                if (!percentMatch) return 0;
+                value = parseFloat(percentMatch[1]);
+            }
+
+            // Check if it represents a reduction or an increase
+            if (text.includes("감소") || text.includes("안정") || text.includes("완화") || text.includes("감쇠") || text.includes("단축") || text.includes("개선")) {
+                return -value;
+            }
+            if (text.includes("증가") || text.includes("패널티") || text.includes("지연") || text.includes("악화") || text.includes("상승")) {
+                return value;
+            }
+            return 0;
+        }
+
+        function getBarStyles(valText) {
+            const x = parseRecoilValue(valText);
+            const maxVal = 40; // 40% is the max scale of recoil change
+            const clamped = Math.min(Math.max(x, -maxVal), maxVal);
+
+            const widthPct = Math.abs(clamped) * (50 / maxVal); // max 50% width
+            let leftPct;
+            let color;
+
+            if (clamped < 0) {
+                leftPct = 50 - widthPct;
+                color = "var(--benefit-text)";
+            } else if (clamped > 0) {
+                leftPct = 50;
+                color = "var(--penalty-text)";
+            } else {
+                leftPct = 50;
+                color = "transparent";
+            }
+
+            return { left: leftPct, width: widthPct, color };
+        }
+
+        function createStatBarHtml(label, valText) {
+            const styles = getBarStyles(valText);
+            const isNeutral = valText.includes("변화 없음") || parseRecoilValue(valText) === 0;
+            const valColor = valText.includes("감소") || valText.includes("안정") || valText.includes("완화") || valText.includes("단축") || valText.includes("개선") ? "var(--benefit-text)" :
+                valText.includes("증가") || valText.includes("패널티") || valText.includes("지연") || valText.includes("상승") ? "var(--penalty-text)" : "var(--text-muted)";
+            const valWeight = isNeutral ? "500" : "800";
+
+            return `
+                <div class="stat-bar-item" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700;">
+                        <span style="color: var(--card-title);">${label}</span>
+                        <span style="color: ${valColor}; font-weight: ${valWeight}; font-size: 0.78rem;">${valText}</span>
+                    </div>
+                    <div style="position: relative; height: 8px; background: var(--chip-bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <!-- Center line (0% baseline) -->
+                        <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background: var(--text-muted); opacity: 0.35; z-index: 2;"></div>
+                        <!-- Filled bar -->
+                        <div style="position: absolute; top: 0; bottom: 0; left: ${styles.left}%; width: ${styles.width}%; background: ${styles.color}; border-radius: 2px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                    </div>
+                </div>
+            `;
+        }
+
         function openDetail(item) {
             document.getElementById('modalTitle').innerText = item.name;
             document.getElementById('modalOneLiner').innerHTML = highlightText(item.oneLiner);
             document.getElementById('modalAdvancedText').innerHTML = highlightText(item.advanced);
-            document.getElementById('tdModelVert').innerText = item.modelVert;
-            document.getElementById('tdModelHoriz').innerText = item.modelHoriz;
-            document.getElementById('tdCamVert').innerText = item.camVert;
-            document.getElementById('tdCamHoriz').innerText = item.camHoriz;
+
+            const noiseRangeEl = document.getElementById('modalNoiseRange');
+            if (item.noiseRange) {
+                noiseRangeEl.style.display = 'flex';
+                document.getElementById('modalNoiseRangeVal').innerText = item.noiseRange;
+                document.getElementById('modalNoiseDesc').innerHTML = highlightText(item.noiseDesc || "");
+            } else {
+                noiseRangeEl.style.display = 'none';
+            }
+
+            const barsContainer = document.getElementById('modalStatBars');
+            barsContainer.innerHTML = `
+                ${createStatBarHtml("모델 수직 (총구 Pitch)", item.modelVert)}
+                ${createStatBarHtml("모델 수평 (총구 Yaw)", item.modelHoriz)}
+                ${createStatBarHtml("카메라 수직 (화면 Pitch)", item.camVert)}
+                ${createStatBarHtml("카메라 수평 (화면 Yaw)", item.camHoriz)}
+            `;
+
             document.getElementById('modalRecoilDesc').innerHTML = highlightText(item.recoilDesc);
             toggleModal(true);
         }
@@ -1545,6 +1641,42 @@
 
             if (!item1 || !item2) return;
 
+            const showNoiseRow = item1.noiseRange || item2.noiseRange;
+            let noiseRowHtml = "";
+            if (showNoiseRow) {
+                const val1 = item1.noiseRange || "Unsuppressed (소음 효과 없음)";
+                const val2 = item2.noiseRange || "Unsuppressed (소음 효과 없음)";
+
+                const getNoiseStyle = (val) => {
+                    if (val.includes("Unsuppressed") || val.includes("소음 효과 없음")) {
+                        return `color: var(--text-muted); font-weight: 500;`;
+                    }
+                    return `color: var(--benefit-text); font-weight: 800;`;
+                };
+
+                noiseRowHtml = `
+                    <tr>
+                        <td class="stat-row-title">소음 감지 범위</td>
+                        <td style="${getNoiseStyle(val1)}">${val1}</td>
+                        <td style="${getNoiseStyle(val2)}">${val2}</td>
+                    </tr>
+                `;
+            }
+
+            const getCompareNoiseBlock = (item) => {
+                if (!item.noiseRange) return "";
+                return `
+                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; background: rgba(46, 204, 113, 0.1); border-radius: 8px; border: 1px solid var(--border-glass);">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--benefit-text); display: flex; align-items: center; gap: 4px;">
+                            <span>🔕</span>
+                            <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">소음 감지:</span>
+                            <span>${item.noiseRange}</span>
+                        </div>
+                        ${item.noiseDesc ? `<div style="font-size: 0.78rem; opacity: 0.85; line-height: 1.3;">${highlightText(item.noiseDesc)}</div>` : ''}
+                    </div>
+                `;
+            };
+
             compareTableContainer.innerHTML = `
                 <table class="stat-table" style="margin-top: 10px;">
                     <thead>
@@ -1575,15 +1707,18 @@
                             <td>${getCompareBadge(item1.camHoriz)}</td>
                             <td>${getCompareBadge(item2.camHoriz)}</td>
                         </tr>
+                        ${noiseRowHtml}
                     </tbody>
                 </table>
                 <div class="glass-panel markdown-block" style="margin-top: 12px; padding: 12px;">
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item1.name} 성향</div>
                     <div>${highlightText(item1.advanced)}</div>
+                    ${getCompareNoiseBlock(item1)}
                 </div>
                 <div class="glass-panel markdown-block" style="margin-top: 10px; padding: 12px;">
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item2.name} 성향</div>
                     <div>${highlightText(item2.advanced)}</div>
+                    ${getCompareNoiseBlock(item2)}
                 </div>
             `;
         }
