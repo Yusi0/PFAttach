@@ -62,6 +62,16 @@
             align-items: flex-start;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
+            -ms-overflow-style: none;
+            /* IE/Edge 스크롤바 숨기기 */
+            scrollbar-width: none;
+            /* Firefox 스크롤바 숨기기 */
+        }
+
+        /* Chrome, Safari, Opera, Edge (Webkit) 스크롤바 숨기기 */
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         /* 글래스모피즘용 고정 배경 광원 */
@@ -153,10 +163,34 @@
             display: flex;
             gap: 8px;
             align-items: center;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-glass);
             border-radius: 12px;
             padding: 10px 14px;
+            position: sticky;
+            top: 10px;
+            z-index: 80;
+            box-shadow: 0 4px 20px var(--shadow-glass);
+        }
+
+        /* 플로팅 컨트롤 버튼 스타일 */
+        .floating-jump-btn:hover {
+            opacity: 0.7;
+        }
+
+        .floating-jump-btn:active {
+            transform: scale(0.95);
+        }
+
+        #scrollTopBtn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        #scrollTopBtn:active {
+            transform: translateY(0) scale(0.9);
         }
 
         .search-bar input {
@@ -302,8 +336,21 @@
         .section-heading {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            padding: 8px 2px 0;
+            align-items: center;
+            padding: 10px 8px;
+            border-radius: 10px;
+            transition: background 0.2s, opacity 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-heading:hover {
+            background: rgba(255, 255, 255, 0.18);
+            opacity: 0.95;
+        }
+
+        [data-theme="dark"] .section-heading:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .section-heading h3 {
@@ -864,6 +911,27 @@
         </nav>
     </div>
 
+    <!-- 플로팅 컨트롤 센터 (퀵점프 + 탑버튼) -->
+    <div id="floatingControlCenter" class="glass-panel"
+        style="position: fixed; bottom: 85px; right: 16px; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; z-index: 90; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 32px var(--shadow-glass); background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-glass);">
+        <button class="floating-jump-btn" onclick="scrollToSection('group-muzzle')"
+            style="background: transparent; border: none; font-size: 0.72rem; font-weight: 800; color: var(--text-color); cursor: pointer; padding: 4px 8px; transition: opacity 0.2s;">머즐</button>
+        <div style="width: 1px; height: 12px; background: var(--border-glass);"></div>
+        <button class="floating-jump-btn" onclick="scrollToSection('group-suppressor')"
+            style="background: transparent; border: none; font-size: 0.72rem; font-weight: 800; color: var(--text-color); cursor: pointer; padding: 4px 8px; transition: opacity 0.2s;">소음기</button>
+        <div style="width: 1px; height: 12px; background: var(--border-glass);"></div>
+        <button class="floating-jump-btn" onclick="scrollToSection('group-grip')"
+            style="background: transparent; border: none; font-size: 0.72rem; font-weight: 800; color: var(--text-color); cursor: pointer; padding: 4px 8px; transition: opacity 0.2s;">그립</button>
+        <div style="width: 1px; height: 12px; background: var(--border-glass); margin-right: 4px;"></div>
+        <button id="scrollTopBtn" onclick="scrollToTop()"
+            style="background: var(--accent-color); border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; transition: transform 0.2s, background 0.2s;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+        </button>
+    </div>
+
     <!-- 상세 보기 글래스 하프 모달 -->
     <div class="modal" id="detailModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -1267,11 +1335,20 @@
                 e.currentTarget.classList.add('active');
             }
 
+            const cc = document.getElementById('floatingControlCenter');
             if (tabName === 'list') {
                 document.getElementById('listTab').classList.add('active');
+                if (window.scrollY > 200) {
+                    cc.style.opacity = '1';
+                    cc.style.pointerEvents = 'auto';
+                    cc.style.transform = 'translateY(0)';
+                }
             } else if (tabName === 'compare') {
                 document.getElementById('compareTab').classList.add('active');
                 renderCompare();
+                cc.style.opacity = '0';
+                cc.style.pointerEvents = 'none';
+                cc.style.transform = 'translateY(10px)';
             }
         }
 
@@ -1312,6 +1389,17 @@
         let activeCategory = "all";
         let activePurpose = "all";
 
+        const collapsedGroups = {
+            muzzle: false,
+            suppressor: false,
+            grip: false
+        };
+
+        function toggleGroupCollapse(key) {
+            collapsedGroups[key] = !collapsedGroups[key];
+            renderList();
+        }
+
         function escapeHtml(text = "") {
             return text.replace(/[&<>"']/g, char => ({
                 "&": "&amp;",
@@ -1351,6 +1439,34 @@
             return inCategory && inPurpose && inSearch;
         }
 
+        function formatMiniStat(text) {
+            if (!text || text.includes("변화 없음")) {
+                return `<span style="color: var(--text-muted); font-weight: 500;">-</span>`;
+            }
+            
+            // Check if it's a range like "10~20%"
+            const rangeMatch = text.match(/(\d+(?:\.\d+)?)\s*~\s*(\d+(?:\.\d+)?)/);
+            let pctText = "";
+            if (rangeMatch) {
+                pctText = `${rangeMatch[1]}~${rangeMatch[2]}%`;
+            } else {
+                const percentMatch = text.match(/(\d+(?:\.\d+)?%)/);
+                if (percentMatch) {
+                    pctText = percentMatch[1];
+                } else {
+                    return `<span style="color: var(--accent-color); font-weight: 700; font-size: 0.72rem;">반전</span>`;
+                }
+            }
+            
+            if (text.includes("감소") || text.includes("안정") || text.includes("완화") || text.includes("감쇠") || text.includes("단축") || text.includes("개선")) {
+                return `<span style="color: var(--benefit-text); font-weight: 800;">↓${pctText}</span>`;
+            }
+            if (text.includes("증가") || text.includes("패널티") || text.includes("지연") || text.includes("악화") || text.includes("상승")) {
+                return `<span style="color: var(--penalty-text); font-weight: 800;">↑${pctText}</span>`;
+            }
+            return `<span style="color: var(--text-color); font-weight: 700;">${pctText}</span>`;
+        }
+
         function renderList(filterText = searchInput.value) {
             listContainer.innerHTML = "";
             const filtered = orderedDataset.filter(item => matchesFilters(item, filterText));
@@ -1360,32 +1476,74 @@
                 return;
             }
 
+            // 검색어나 필터가 활성화된 경우 자동으로 펼침 처리
+            const isSearchingOrFiltering = filterText.trim() !== "" || activeCategory !== "all" || activePurpose !== "all";
+
             attachmentOrder.forEach(group => {
                 const items = group.ids
                     .map(id => filtered.find(item => item.id === id))
                     .filter(Boolean);
                 if (items.length === 0) return;
 
+                const isCollapsed = isSearchingOrFiltering ? false : !!collapsedGroups[group.key];
+
                 const section = document.createElement('section');
                 section.className = "section-group";
+                section.id = `group-${group.key}`;
                 section.innerHTML = `
-                    <div class="section-heading">
-                        <h3>${group.title}</h3>
+                    <div class="section-heading" onclick="toggleGroupCollapse('${group.key}')">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="collapse-arrow" style="display: inline-block; transition: transform 0.2s; transform: ${isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)'}; font-size: 0.65rem; color: var(--text-muted);">▼</span>
+                            <h3 style="margin: 0; font-size: 0.92rem; font-weight: 900; color: var(--card-title);">${group.title}</h3>
+                        </div>
                         <span class="section-count">${items.length}개</span>
+                    </div>
+                    <div class="section-items-container" style="display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 10px; margin-top: 10px;">
                     </div>
                 `;
 
+                const itemsContainer = section.querySelector('.section-items-container');
+
                 items.forEach(item => {
                     const tags = getPurposeTags(item);
+                    
+                    const hasActiveNoiseSuppression = item.noiseRange && !item.noiseRange.includes("소음 효과 없음") && !item.noiseRange.includes("Unsuppressed");
+                    const noiseBadgeHtml = hasActiveNoiseSuppression 
+                        ? `<span class="badge" style="background: var(--badge-green); color: var(--benefit-text); border-color: rgba(46, 204, 113, 0.35); font-weight: 700;">🔕 ${item.noiseRange.replace(" 밖 차단", "")}</span>` 
+                        : '';
+
                     const card = document.createElement('div');
                     card.className = "item-card";
                     card.onclick = () => openDetail(item);
                     card.innerHTML = `
-                        <div class="item-card-header">
-                            <span class="item-card-title">${escapeHtml(item.name)}</span>
-                            <span class="badge">${escapeHtml(item.category)}</span>
+                        <div class="item-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                            <span class="item-card-title" style="flex: 1;">${escapeHtml(item.name)}</span>
+                            <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
+                                <span class="badge">${escapeHtml(item.category)}</span>
+                                ${noiseBadgeHtml}
+                            </div>
                         </div>
-                        <div class="card-footer-row">
+
+                        <div class="card-mini-stats" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 12px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-glass); font-size: 0.74rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: var(--text-muted); font-weight: 500;">총구 수직/수평</span>
+                                <span style="display: flex; gap: 4px; align-items: center;">
+                                    ${formatMiniStat(item.modelVert)}
+                                    <span style="color: var(--border-glass); font-size: 0.65rem;">|</span>
+                                    ${formatMiniStat(item.modelHoriz)}
+                                </span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: var(--text-muted); font-weight: 500;">화면 수직/수평</span>
+                                <span style="display: flex; gap: 4px; align-items: center;">
+                                    ${formatMiniStat(item.camVert)}
+                                    <span style="color: var(--border-glass); font-size: 0.65rem;">|</span>
+                                    ${formatMiniStat(item.camHoriz)}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-row" style="margin-top: 8px;">
                             <div class="card-tags">
                                 ${tags.map(tag => `<span class="tag-pill">${tag.label}</span>`).join("")}
                             </div>
@@ -1397,7 +1555,7 @@
                             </span>
                         </div>
                     `;
-                    section.appendChild(card);
+                    itemsContainer.appendChild(card);
                 });
 
                 listContainer.appendChild(section);
@@ -1765,6 +1923,37 @@
                 });
             });
         }
+
+        // 플로팅 컨트롤 및 퀵점프 관련 함수
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const yOffset = -70; // sticky 검색창 고려 오프셋
+                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 스크롤 감지에 따른 플로팅 바 토글 (목록 탭에서만 활성화)
+        window.addEventListener('scroll', () => {
+            const cc = document.getElementById('floatingControlCenter');
+            const listTab = document.getElementById('listTab');
+            const isListTabActive = listTab && listTab.classList.contains('active');
+
+            if (isListTabActive && window.scrollY > 200) {
+                cc.style.opacity = '1';
+                cc.style.pointerEvents = 'auto';
+                cc.style.transform = 'translateY(0)';
+            } else {
+                cc.style.opacity = '0';
+                cc.style.pointerEvents = 'none';
+                cc.style.transform = 'translateY(10px)';
+            }
+        });
 
         // 애플리케이션 시작점
         window.onload = () => {
