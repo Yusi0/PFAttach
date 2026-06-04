@@ -1,0 +1,116 @@
+[
+  {
+    "id": "ak12",
+    "name": "AK-12",
+    "category": "AR(돌격소총)",
+    "maxDamage": 33,
+    "minDamage": 21,
+    "firerate": "700 A | 1000 B | 700 S",
+    "fireModes": [
+      "AUTO",
+      "BURST",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.15,
+      "modelTransHoriz": 0.0,
+      "modelTransDepth": 4.5,
+      "modelRotVert": 0.35,
+      "modelRotHoriz": 0.0,
+      "camVert": 1.4,
+      "camHoriz": 0.05
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14,
+      "muzzleVelocity": 2950,
+      "minRange": 70,
+      "maxRange": 160
+    }
+  },
+  {
+    "id": "vz806",
+    "name": "VZ.806",
+    "category": "AR(돌격소총)",
+    "maxDamage": 31,
+    "minDamage": 19,
+    "firerate": "850",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.60,
+      "modelTransHoriz": 0.00,
+      "modelTransDepth": 7.20,
+      "modelRotVert": -0.40,
+      "modelRotHoriz": 0.00,
+      "camVert": 2.20,
+      "camHoriz": 0.00
+    },
+    "baseStats": {
+      "adsSpeed": 12.5,
+      "walkSpeed": 14,
+      "muzzleVelocity": 2800,
+      "minRange": 70,
+      "maxRange": 160
+    }
+  },
+  {
+    "id": "an94",
+    "name": "AN-94",
+    "category": "AR(돌격소총)",
+    "maxDamage": 30,
+    "minDamage": 23,
+    "firerate": "600 A | 1800 B | 600 S",
+    "fireModes": [
+      "AUTO",
+      "BURST",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.15,
+      "modelTransHoriz": 0.00,
+      "modelTransDepth": 8.50,
+      "modelRotVert": -0.15,
+      "modelRotHoriz": 0.00,
+      "camVert": 1.40,
+      "camHoriz": 0.05
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14,
+      "muzzleVelocity": 2950,
+      "minRange": 50,
+      "maxRange": 120
+    }
+  },
+  {
+    "id": "asval",
+    "name": "AS VAL",
+    "category": "AR(돌격소총)",
+    "maxDamage": 28,
+    "minDamage": 21,
+    "firerate": "800",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -1.40,
+      "modelTransHoriz": 0.50,
+      "modelTransDepth": 7.90,
+      "modelRotVert": -0.60,
+      "modelRotHoriz": 0.00,
+      "camVert": 1.80,
+      "camHoriz": 0.00
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14,
+      "muzzleVelocity": 985,
+      "minRange": 60,
+      "maxRange": 120
+    }
+  }
+]

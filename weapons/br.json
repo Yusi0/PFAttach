@@ -1,0 +1,30 @@
+[
+  {
+    "id": "m14",
+    "name": "M14",
+    "category": "BR(전투소총)",
+    "maxDamage": 40,
+    "minDamage": 30,
+    "firerate": "750",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -1.40,
+      "modelTransHoriz": 0.50,
+      "modelTransDepth": 5.90,
+      "modelRotVert": 0.20,
+      "modelRotHoriz": -0.10,
+      "camVert": 3.80,
+      "camHoriz": 0.00
+    },
+    "baseStats": {
+      "adsSpeed": 11,
+      "walkSpeed": 13.5,
+      "muzzleVelocity": 2550,
+      "minRange": 80,
+      "maxRange": 160
+    }
+  }
+]
