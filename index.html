@@ -934,6 +934,56 @@
             </div>
         </main>
 
+        <!-- [탭 3] 로드아웃 시뮬레이터 -->
+        <main id="simulatorTab" class="tab-content">
+            <div class="glass-panel compare-grid">
+                <h2 style="font-weight: 800; color: var(--card-title); margin-bottom: 4px;">실시간 로드아웃 빌더</h2>
+                <p style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 12px;">총기와 부착물을 선택하여 최종 연산 반동과 스탯 변화를 실시간으로 비교해보세요.</p>
+                
+                <div class="selector-box" style="flex-direction: column; gap: 8px;">
+                    <!-- 총구 선택 슬롯 -->
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">베이스 총기</span>
+                        <div class="custom-select-wrapper" id="simWeaponWrapper" style="width: 100%;">
+                            <div class="custom-select-trigger" id="simWeaponTrigger">총기 선택</div>
+                            <div class="custom-options" id="simWeaponOptions"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 부착물 장착 슬롯 2개 -->
+                    <div style="display: flex; gap: 10px; margin-top: 4px;">
+                        <div style="display: flex; flex-direction: column; gap: 4px; width: 50%;">
+                            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">머즐 / 소음기 슬롯</span>
+                            <div class="custom-select-wrapper" id="simMuzzleWrapper" style="width: 100%;">
+                                <div class="custom-select-trigger" id="simMuzzleTrigger">순정 (None)</div>
+                                <div class="custom-options" id="simMuzzleOptions"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 4px; width: 50%;">
+                            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">그립 슬롯</span>
+                            <div class="custom-select-wrapper" id="simGripWrapper" style="width: 100%;">
+                                <div class="custom-select-trigger" id="simGripTrigger">순정 (None)</div>
+                                <div class="custom-options" id="simGripOptions"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 총기 유틸리티 정보 및 대미지 카드 -->
+                <div class="glass-panel" id="simStatsCard" style="margin-top: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem;">
+                    <!-- JS에서 동적 로드 -->
+                </div>
+
+                <!-- 비교 시뮬레이션 그래프 -->
+                <div class="glass-panel" style="margin-top: 10px; padding: 14px;">
+                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--card-title); margin-bottom: 12px; border-bottom: 1px dashed var(--border-glass); padding-bottom: 6px;">실시간 연산 반동 그래프 (순정 vs 튜닝)</div>
+                    <div id="simStatBars" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- JS에서 동적 렌더링 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
         <!-- 하단 고정 네비게이션 -->
         <nav class="bottom-nav">
             <button class="nav-btn active" onclick="switchTab('list', event)">
@@ -948,6 +998,12 @@
                         d="M18 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.1 2 18 2ZM18 20H6V4H18V20ZM9 9H15V11H9V9ZM9 13H15V15H9V13Z" />
                 </svg>
                 대조 비교
+            </button>
+            <button class="nav-btn" onclick="switchTab('simulator', event)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                </svg>
+                시뮬레이터
             </button>
         </nav>
     </div>
@@ -1402,6 +1458,59 @@
                 recoilDesc: "연사 주기가 단축되는 대신 실제 총기가 뒤로 밀려나는 전후 킥 반동(Z축)과 수직/수평 카메라 흔들림이 약 10% 내외로 늘어나 격발감이 다소 사나워집니다."
             }
         ];
+
+        const weapons = [
+            {
+                id: "m14",
+                name: "M14",
+                category: "전투소총 (Battle Rifle)",
+                maxDamage: 41,
+                minDamage: 28,
+                firerate: "700 S",
+                fireModes: ["SEMI"],
+                baseRecoil: {
+                    modelTransVert: 1.4,
+                    modelTransHoriz: 0.5,
+                    modelTransDepth: 5.9,
+                    modelRotVert: 0.2,
+                    modelRotHoriz: 0.1,
+                    camVert: 3.8,
+                    camHoriz: 0.0
+                },
+                baseStats: {
+                    adsSpeed: 11,
+                    walkSpeed: 13.5,
+                    muzzleVelocity: 2550,
+                    minRange: 80,
+                    maxRange: 160
+                }
+            },
+            {
+                id: "ak12",
+                name: "AK-12",
+                category: "돌격소총 (Assault Rifle)",
+                maxDamage: 33,
+                minDamage: 21,
+                firerate: "700 A | 1000 B | 700 S",
+                fireModes: ["AUTO", "BURST", "SEMI"],
+                baseRecoil: {
+                    modelTransVert: -0.15,
+                    modelTransHoriz: 0.0,
+                    modelTransDepth: 4.5,
+                    modelRotVert: 0.35,
+                    modelRotHoriz: 0.0,
+                    camVert: 1.4,
+                    camHoriz: 0.05
+                },
+                baseStats: {
+                    adsSpeed: 15,
+                    walkSpeed: 14,
+                    muzzleVelocity: 2950,
+                    minRange: 70,
+                    maxRange: 160
+                }
+            }
+        ];
         // 초기 테마 설정 (로컬 스토리지 또는 브라우저 선호도)
         let currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
@@ -1435,6 +1544,12 @@
             } else if (tabName === 'compare') {
                 document.getElementById('compareTab').classList.add('active');
                 renderCompare();
+                cc.style.opacity = '0';
+                cc.style.pointerEvents = 'none';
+                cc.style.transform = 'translateY(10px)';
+            } else if (tabName === 'simulator') {
+                document.getElementById('simulatorTab').classList.add('active');
+                initSimulator();
                 cc.style.opacity = '0';
                 cc.style.pointerEvents = 'none';
                 cc.style.transform = 'translateY(10px)';
@@ -2134,6 +2249,280 @@
                 cc.style.transform = 'translateY(10px)';
             }
         });
+
+        // 로드아웃 시뮬레이터 로직
+        let selectedSimWeapon = "m14";
+        let selectedSimMuzzle = "none";
+        let selectedSimGrip = "none";
+
+        function initSimulator() {
+            const weaponOptions = document.getElementById('simWeaponOptions');
+            const weaponTrigger = document.getElementById('simWeaponTrigger');
+            const weaponWrapper = document.getElementById('simWeaponWrapper');
+
+            // 현재 선택된 총기 바인딩
+            const currentWeapon = weapons.find(w => w.id === selectedSimWeapon) || weapons[0];
+            selectedSimWeapon = currentWeapon.id;
+            weaponTrigger.innerText = currentWeapon.name;
+
+            // 총기 드롭다운 옵션 생성
+            weaponOptions.innerHTML = "";
+            weapons.forEach(w => {
+                const opt = document.createElement('div');
+                opt.className = `custom-option ${w.id === selectedSimWeapon ? 'selected' : ''}`;
+                opt.innerText = w.name;
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedSimWeapon = w.id;
+                    weaponTrigger.innerText = w.name;
+                    weaponWrapper.classList.remove('open');
+                    initSimulatorDropdowns();
+                    calculateSimulation();
+                });
+                weaponOptions.appendChild(opt);
+            });
+
+            weaponTrigger.onclick = (e) => {
+                e.stopPropagation();
+                weaponWrapper.classList.toggle('open');
+                document.getElementById('simMuzzleWrapper').classList.remove('open');
+                document.getElementById('simGripWrapper').classList.remove('open');
+            };
+
+            initSimulatorDropdowns();
+            calculateSimulation();
+        }
+
+        function initSimulatorDropdowns() {
+            const muzzleOptions = document.getElementById('simMuzzleOptions');
+            const muzzleTrigger = document.getElementById('simMuzzleTrigger');
+            const muzzleWrapper = document.getElementById('simMuzzleWrapper');
+
+            const gripOptions = document.getElementById('simGripOptions');
+            const gripTrigger = document.getElementById('simGripTrigger');
+            const gripWrapper = document.getElementById('simGripWrapper');
+
+            // 1. 머즐 슬롯 옵션 생성
+            muzzleOptions.innerHTML = "";
+            
+            const noneMuzzleOpt = document.createElement('div');
+            noneMuzzleOpt.className = `custom-option ${selectedSimMuzzle === "none" ? 'selected' : ''}`;
+            noneMuzzleOpt.innerText = "순정 (None)";
+            noneMuzzleOpt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedSimMuzzle = "none";
+                muzzleTrigger.innerText = "순정 (None)";
+                muzzleWrapper.classList.remove('open');
+                calculateSimulation();
+            });
+            muzzleOptions.appendChild(noneMuzzleOpt);
+
+            const muzzleAttachments = dataset.filter(item => item.category === "머즐" || item.category === "소음기");
+            muzzleAttachments.forEach(item => {
+                const opt = document.createElement('div');
+                opt.className = `custom-option ${item.id === selectedSimMuzzle ? 'selected' : ''}`;
+                opt.innerText = item.name;
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedSimMuzzle = item.id;
+                    muzzleTrigger.innerText = item.name;
+                    muzzleWrapper.classList.remove('open');
+                    calculateSimulation();
+                });
+                muzzleOptions.appendChild(opt);
+            });
+
+            muzzleTrigger.onclick = (e) => {
+                e.stopPropagation();
+                muzzleWrapper.classList.toggle('open');
+                document.getElementById('simWeaponWrapper').classList.remove('open');
+                document.getElementById('simGripWrapper').classList.remove('open');
+            };
+
+            if (selectedSimMuzzle === "none") {
+                muzzleTrigger.innerText = "순정 (None)";
+            } else {
+                const currentMuzzle = dataset.find(i => i.id === selectedSimMuzzle);
+                muzzleTrigger.innerText = currentMuzzle ? currentMuzzle.name : "순정 (None)";
+            }
+
+            // 2. 그립 슬롯 옵션 생성
+            gripOptions.innerHTML = "";
+
+            const noneGripOpt = document.createElement('div');
+            noneGripOpt.className = `custom-option ${selectedSimGrip === "none" ? 'selected' : ''}`;
+            noneGripOpt.innerText = "순정 (None)";
+            noneGripOpt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedSimGrip = "none";
+                gripTrigger.innerText = "순정 (None)";
+                gripWrapper.classList.remove('open');
+                calculateSimulation();
+            });
+            gripOptions.appendChild(noneGripOpt);
+
+            const gripAttachments = dataset.filter(item => item.category === "그립");
+            gripAttachments.forEach(item => {
+                const opt = document.createElement('div');
+                opt.className = `custom-option ${item.id === selectedSimGrip ? 'selected' : ''}`;
+                opt.innerText = item.name;
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedSimGrip = item.id;
+                    gripTrigger.innerText = item.name;
+                    gripWrapper.classList.remove('open');
+                    calculateSimulation();
+                });
+                gripOptions.appendChild(opt);
+            });
+
+            gripTrigger.onclick = (e) => {
+                e.stopPropagation();
+                gripWrapper.classList.toggle('open');
+                document.getElementById('simWeaponWrapper').classList.remove('open');
+                document.getElementById('simMuzzleWrapper').classList.remove('open');
+            };
+
+            if (selectedSimGrip === "none") {
+                gripTrigger.innerText = "순정 (None)";
+            } else {
+                const currentGrip = dataset.find(i => i.id === selectedSimGrip);
+                gripTrigger.innerText = currentGrip ? currentGrip.name : "순정 (None)";
+            }
+
+            document.addEventListener('click', () => {
+                document.getElementById('simWeaponWrapper').classList.remove('open');
+                muzzleWrapper.classList.remove('open');
+                gripWrapper.classList.remove('open');
+            });
+        }
+
+        function calculateSimulation() {
+            const weapon = weapons.find(w => w.id === selectedSimWeapon) || weapons[0];
+            const muzzle = dataset.find(i => i.id === selectedSimMuzzle);
+            const grip = dataset.find(i => i.id === selectedSimGrip);
+
+            const simStatsCard = document.getElementById('simStatsCard');
+            
+            let partsSummary = "";
+            if (muzzle || grip) {
+                partsSummary = `
+                    <div style="font-size:0.74rem; border-top:1px dashed var(--border-glass); padding-top:8px; margin-top:4px; display:flex; flex-direction:column; gap:4px;">
+                        ${muzzle ? `<div><strong>장착 머즐:</strong> ${highlightText(muzzle.advanced)}</div>` : ''}
+                        ${grip ? `<div><strong>장착 그립:</strong> ${highlightText(grip.advanced)}</div>` : ''}
+                    </div>
+                `;
+            }
+
+            simStatsCard.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">총기 계열 / 조정간</div>
+                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.category} [${weapon.fireModes.join("/")}]</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">연사 속도 (RPM)</div>
+                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.firerate}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">기본 대미지 / 사거리</div>
+                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.maxDamage} ~ ${weapon.minDamage} (${weapon.baseStats.minRange}~${weapon.baseStats.maxRange} studs)</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">탄속 / 기동 조준속도</div>
+                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.baseStats.muzzleVelocity} studs/s | 조준: ${weapon.baseStats.adsSpeed} frames</div>
+                    </div>
+                </div>
+                ${partsSummary}
+            `;
+
+            const getSimVal = (key) => {
+                const baseVal = weapon.baseRecoil[key];
+                const mulMuzzle = muzzle ? (1 + parseRecoilValue(muzzle[key]) / 100) : 1;
+                const mulGrip = grip ? (1 + parseRecoilValue(grip[key]) / 100) : 1;
+                return baseVal * mulMuzzle * mulGrip;
+            };
+
+            const finalTransVert = getSimVal("modelTransVert");
+            const finalTransHoriz = getSimVal("modelTransHoriz");
+            const finalTransDepth = getSimVal("modelTransDepth");
+            const finalRotVert = getSimVal("modelRotVert");
+            const finalRotHoriz = getSimVal("modelRotHoriz");
+            const finalCamVert = getSimVal("camVert");
+            const finalCamHoriz = getSimVal("camHoriz");
+
+            const barsContainer = document.getElementById('simStatBars');
+            barsContainer.innerHTML = `
+                ${createSimBarHtml("총구 이동 수직", "modelTransVert", weapon.baseRecoil.modelTransVert, finalTransVert)}
+                ${createSimBarHtml("총구 이동 수평", "modelTransHoriz", weapon.baseRecoil.modelTransHoriz, finalTransHoriz)}
+                ${createSimBarHtml("총구 이동 전후", "modelTransDepth", weapon.baseRecoil.modelTransDepth, finalTransDepth)}
+                ${createSimBarHtml("총구 회전 수직", "modelRotVert", weapon.baseRecoil.modelRotVert, finalRotVert)}
+                ${createSimBarHtml("총구 회전 수평", "modelRotHoriz", weapon.baseRecoil.modelRotHoriz, finalRotHoriz)}
+                ${createSimBarHtml("화면 반동 수직", "camVert", weapon.baseRecoil.camVert, finalCamVert)}
+                ${createSimBarHtml("화면 반동 수평", "camHoriz", weapon.baseRecoil.camHoriz, finalCamHoriz)}
+            `;
+
+            setTimeout(() => {
+                const fills = document.querySelectorAll('.sim-fill-bar');
+                fills.forEach(bar => {
+                    const targetWidth = bar.getAttribute('data-width');
+                    bar.style.width = targetWidth + '%';
+                });
+            }, 50);
+        }
+
+        function createSimBarHtml(label, key, baseVal, finalVal) {
+            const maxLimits = {
+                modelTransVert: 2.0,
+                modelTransHoriz: 2.0,
+                modelTransDepth: 8.0,
+                modelRotVert: 0.5,
+                modelRotHoriz: 0.5,
+                camVert: 5.0,
+                camHoriz: 2.0
+            };
+
+            const maxRef = maxLimits[key] || 5.0;
+            const basePct = Math.min(Math.max((Math.abs(baseVal) / maxRef) * 100, 2), 100);
+            const finalPct = Math.min(Math.max((Math.abs(finalVal) / maxRef) * 100, 2), 100);
+
+            const baseAbs = Math.abs(baseVal);
+            const finalAbs = Math.abs(finalVal);
+            const diffPct = baseAbs > 0.001 ? ((finalAbs - baseAbs) / baseAbs) * 100 : 0;
+
+            let changeText = "";
+            let barColor = "var(--accent-color)";
+
+            if (diffPct < -0.01) {
+                changeText = `<span style="color: var(--benefit-text); font-weight: 800; font-size: 0.74rem; margin-left: 6px;">↓${Math.abs(diffPct).toFixed(1)}%</span>`;
+                barColor = "var(--benefit-text)";
+            } else if (diffPct > 0.01) {
+                changeText = `<span style="color: var(--penalty-text); font-weight: 800; font-size: 0.74rem; margin-left: 6px;">↑${Math.abs(diffPct).toFixed(1)}%</span>`;
+                barColor = "var(--penalty-text)";
+            } else {
+                changeText = `<span style="color: var(--text-muted); font-size: 0.74rem; margin-left: 6px;">-</span>`;
+            }
+
+            return `
+                <div class="sim-bar-item" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700;">
+                        <span style="color: var(--card-title);">${label}</span>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span style="color: var(--text-muted); font-size: 0.72rem;">${baseVal.toFixed(2)}</span>
+                            <span style="color: var(--text-muted); font-size: 0.68rem;">➡</span>
+                            <span style="font-weight: 800; color: var(--card-title);">${finalVal.toFixed(2)}</span>
+                            ${changeText}
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 8px; background: var(--chip-bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <!-- Base marker -->
+                        <div style="position: absolute; top: 0; bottom: 0; left: 0; width: ${basePct}%; background: rgba(127,127,127,0.22); border-radius: 2px; border-right: 1.5px solid var(--text-muted); z-index: 1;"></div>
+                        <!-- Final simulated active bar -->
+                        <div class="sim-fill-bar" data-width="${finalPct}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 0%; background: ${barColor}; border-radius: 2px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 2;"></div>
+                    </div>
+                </div>
+            `;
+        }
 
         // 애플리케이션 시작점
         window.onload = () => {
