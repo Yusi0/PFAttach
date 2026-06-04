@@ -996,9 +996,11 @@
                 </div>
             </div>
 
-            <div class="markdown-block" id="modalAdvancedText" style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
+            <div class="markdown-block" id="modalAdvancedText"
+                style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
 
-            <div class="markdown-block" id="modalRecoilDesc" style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
+            <div class="markdown-block" id="modalRecoilDesc"
+                style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
             <div class="glass-panel" id="modalStatBars"
                 style="padding: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 12px;">
                 <!-- JavaScript를 통해 동적 렌더링 -->
@@ -1359,10 +1361,11 @@
                 category: "머즐",
                 oneLiner: "수직 반동이 너무 심해 격발 시 에임을 위로 올리는 변칙 플레이나 고유의 반동 방향 변환을 활용하고 싶을 때 적합.",
                 advanced: "지향사격 복원 속도가 10% 감소하고, 지향사격 확산 감쇠가 20% 크게 감소하는 지향 패널티가 있습니다. 대신 조준 속도를 포함한 조작성, 기동성, 탄속, 사거리 등 다른 모든 조작 스탯은 패널티 없이 순정을 그대로 유지합니다.",
-                modelTransVert: "조준 반전 [수직 60% 감소 / 전후 50% 증가 패널티]",
-                modelTransHoriz: "조준 반전 [30% 증가 패널티]",
-                modelRotVert: "조준 반전 [수직 25% 감소], 지향 20% 증가 [패널티]",
-                modelRotHoriz: "조준 반전 [30% 증가 패널티], 지향 20% 증가 [패널티]",
+                modelTransVert: "조준 60% 감소",
+                modelTransHoriz: "조준 30% 증가 [패널티]",
+                modelTransDepth: "조준 50% 증가 [패널티]",
+                modelRotVert: "조준 25% [감소], 지향 20% 증가 [패널티]",
+                modelRotHoriz: "조준 30% 증가 [패널티], 지향 20% 증가 [패널티]",
                 camVert: "조준 반전 [수직 30% 감소]",
                 camHoriz: "변화 없음",
                 recoilDesc: "격발 시 반동 수식에 음수 배율을 곱하여 총구가 위가 아닌 아래로 내려가는 등 수직/수평 반동 방향 자체가 완벽하게 반전되는 전용 부착물입니다."
@@ -1389,8 +1392,9 @@
                 category: "머즐",
                 oneLiner: "반동 증가 패널티를 감수하고라도 연사 속도(RPM)를 극대화해 최단 킬 타임(TTK) 화력을 극한으로 끌어올리고 싶을 때 적합.",
                 advanced: "연사 속도가 향상되어 최단 킬 타임이 한 박자 빠르게 단축되는 강력한 화력 버프를 줍니다. 단 제압력이 50% 급감하고 지향사격 확산도가 넓어지며 확산 감쇠가 10% 감소합니다.",
-                modelTransVert: "전후 반동 10% 증가 (패널티)",
+                modelTransVert: "변화 없음",
                 modelTransHoriz: "변화 없음",
+                modelTransDepth: "10% 증가 (패널티)",
                 modelRotVert: "변화 없음",
                 modelRotHoriz: "변화 없음",
                 camVert: "12% 증가 (패널티)",
@@ -1446,6 +1450,12 @@
             } else {
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
+                // Reset bars to 0% width so they animate next time
+                const fills = document.querySelectorAll('.stat-fill-bar');
+                fills.forEach(bar => {
+                    bar.style.left = '50%';
+                    bar.style.width = '0%';
+                });
             }
         }
 
@@ -1724,7 +1734,7 @@
                         <!-- Center line (0% baseline) -->
                         <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background: var(--text-muted); opacity: 0.35; z-index: 2;"></div>
                         <!-- Filled bar -->
-                        <div style="position: absolute; top: 0; bottom: 0; left: ${styles.left}%; width: ${styles.width}%; background: ${styles.color}; border-radius: 2px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                        <div class="stat-fill-bar" data-left="${styles.left}" data-width="${styles.width}" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 0%; background: ${styles.color}; border-radius: 2px; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);"></div>
                     </div>
                 </div>
             `;
@@ -1744,11 +1754,16 @@
                 noiseRangeEl.style.display = 'none';
             }
 
+            const depthBarHtml = (item.modelTransDepth && item.modelTransDepth !== "변화 없음")
+                ? createStatBarHtml("총구 이동 전후", item.modelTransDepth)
+                : "";
+
             const barsContainer = document.getElementById('modalStatBars');
             barsContainer.innerHTML = `
                 <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-color); margin-top: 4px; margin-bottom: 2px;">총구 반동 (Model Recoil)</div>
                 ${createStatBarHtml("총구 이동 수직", item.modelTransVert)}
                 ${createStatBarHtml("총구 이동 수평", item.modelTransHoriz)}
+                ${depthBarHtml}
                 ${createStatBarHtml("총구 회전 수직", item.modelRotVert)}
                 ${createStatBarHtml("총구 회전 수평", item.modelRotHoriz)}
                 
@@ -1759,6 +1774,17 @@
 
             document.getElementById('modalRecoilDesc').innerHTML = `<strong>반동 상세:</strong> ${highlightText(item.recoilDesc)}`;
             toggleModal(true);
+
+            // Trigger the spring animation for the stat bars
+            setTimeout(() => {
+                const fills = document.querySelectorAll('.stat-fill-bar');
+                fills.forEach(bar => {
+                    const targetLeft = bar.getAttribute('data-left');
+                    const targetWidth = bar.getAttribute('data-width');
+                    bar.style.left = targetLeft + '%';
+                    bar.style.width = targetWidth + '%';
+                });
+            }, 50);
         }
 
         function setActiveFilter(containerId, value) {
@@ -1959,6 +1985,19 @@
                 `;
             };
 
+            const showDepthRow = (item1.modelTransDepth && item1.modelTransDepth !== "변화 없음") ||
+                                 (item2.modelTransDepth && item2.modelTransDepth !== "변화 없음");
+            let depthRowHtml = "";
+            if (showDepthRow) {
+                depthRowHtml = `
+                    <tr>
+                        <td class="stat-row-title">총구 이동 전후</td>
+                        <td>${getCompareBadge(item1.modelTransDepth || "변화 없음")}</td>
+                        <td>${getCompareBadge(item2.modelTransDepth || "변화 없음")}</td>
+                    </tr>
+                `;
+            }
+
             compareTableContainer.innerHTML = `
                 <table class="stat-table" style="margin-top: 10px;">
                     <thead>
@@ -1982,6 +2021,7 @@
                             <td>${getCompareBadge(item1.modelTransHoriz)}</td>
                             <td>${getCompareBadge(item2.modelTransHoriz)}</td>
                         </tr>
+                        ${depthRowHtml}
                         <tr>
                             <td class="stat-row-title">총구 회전 수직</td>
                             <td>${getCompareBadge(item1.modelRotVert)}</td>
