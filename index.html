@@ -526,12 +526,15 @@
             pointer-events: none;
             transition: opacity 0.24s ease-out;
             overflow-y: auto;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
         }
 
         .modal::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
+            /* Chrome, Safari, Opera */
         }
 
         .modal-content {
@@ -997,13 +1000,12 @@
                 <p id="modalAdvancedText"></p>
             </div>
 
-            <div class="section-title">상세 격발 데이터 (Layer 1)</div>
+            <div class="section-title">상세 격발 데이터</div>
+            <div class="markdown-block" id="modalRecoilDesc" style="margin-top: 4px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
             <div class="glass-panel" id="modalStatBars"
-                style="padding: 14px; margin-top: 5px; display: flex; flex-direction: column; gap: 12px;">
+                style="padding: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 12px;">
                 <!-- JavaScript를 통해 동적 렌더링 -->
             </div>
-
-            <div class="markdown-block" id="modalRecoilDesc">격발 성향 설명</div>
         </div>
     </div>
     <script>
