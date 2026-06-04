@@ -1613,27 +1613,27 @@
                         <div class="card-mini-stats" style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-glass); font-size: 0.74rem;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="color: var(--text-muted); font-weight: 500;">총구 이동</span>
-                                <span style="display: flex; gap: 4px; align-items: center;">
-                                    ${formatMiniStat(item.modelTransVert)}
+                                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; width: 120px; align-items: center;">
+                                    <div style="text-align: right;">${formatMiniStat(item.modelTransVert)}</div>
                                     <span style="color: var(--border-glass); font-size: 0.65rem;">|</span>
-                                    ${formatMiniStat(item.modelTransHoriz)}
-                                </span>
+                                    <div style="text-align: left;">${formatMiniStat(item.modelTransHoriz)}</div>
+                                </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="color: var(--text-muted); font-weight: 500;">총구 회전</span>
-                                <span style="display: flex; gap: 4px; align-items: center;">
-                                    ${formatMiniStat(item.modelRotVert)}
+                                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; width: 120px; align-items: center;">
+                                    <div style="text-align: right;">${formatMiniStat(item.modelRotVert)}</div>
                                     <span style="color: var(--border-glass); font-size: 0.65rem;">|</span>
-                                    ${formatMiniStat(item.modelRotHoriz)}
-                                </span>
+                                    <div style="text-align: left;">${formatMiniStat(item.modelRotHoriz)}</div>
+                                </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="color: var(--text-muted); font-weight: 500;">화면 반동</span>
-                                <span style="display: flex; gap: 4px; align-items: center;">
-                                    ${formatMiniStat(item.camVert)}
+                                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; width: 120px; align-items: center;">
+                                    <div style="text-align: right;">${formatMiniStat(item.camVert)}</div>
                                     <span style="color: var(--border-glass); font-size: 0.65rem;">|</span>
-                                    ${formatMiniStat(item.camHoriz)}
-                                </span>
+                                    <div style="text-align: left;">${formatMiniStat(item.camHoriz)}</div>
+                                </div>
                             </div>
                         </div>
 
