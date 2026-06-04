@@ -805,6 +805,33 @@
             height: 20px;
             fill: currentColor;
         }
+
+        #floatingControlCenter {
+            position: fixed;
+            bottom: 85px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px var(--shadow-glass);
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+        }
+
+        @media (min-width: 480px) {
+            #floatingControlCenter {
+                right: calc(50% - 224px);
+            }
+        }
     </style>
 </head>
 
@@ -914,8 +941,7 @@
     </div>
 
     <!-- 플로팅 컨트롤 센터 (퀵점프 + 탑버튼) -->
-    <div id="floatingControlCenter" class="glass-panel"
-        style="position: fixed; bottom: 85px; right: 16px; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; z-index: 90; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 32px var(--shadow-glass); background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-glass);">
+    <div id="floatingControlCenter" class="glass-panel">
         <button class="floating-jump-btn" onclick="scrollToSection('group-muzzle')"
             style="background: transparent; border: none; font-size: 0.72rem; font-weight: 800; color: var(--text-color); cursor: pointer; padding: 4px 8px; transition: opacity 0.2s;">머즐</button>
         <div style="width: 1px; height: 12px; background: var(--border-glass);"></div>
