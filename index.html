@@ -998,7 +998,7 @@
 
             <div class="markdown-block" id="modalAdvancedText" style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
 
-            <div class="markdown-block" id="modalRecoilDesc" style="margin-top: 14px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
+            <div class="markdown-block" id="modalRecoilDesc" style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
             <div class="glass-panel" id="modalStatBars"
                 style="padding: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 12px;">
                 <!-- JavaScript를 통해 동적 렌더링 -->
@@ -1733,7 +1733,7 @@
         function openDetail(item) {
             document.getElementById('modalTitle').innerText = item.name;
             document.getElementById('modalOneLiner').innerHTML = highlightText(item.oneLiner);
-            document.getElementById('modalAdvancedText').innerHTML = highlightText(item.advanced);
+            document.getElementById('modalAdvancedText').innerHTML = `<strong>일반 상세:</strong> ${highlightText(item.advanced)}`;
 
             const noiseRangeEl = document.getElementById('modalNoiseRange');
             if (item.noiseRange) {
@@ -1757,7 +1757,7 @@
                 ${createStatBarHtml("화면 수평", item.camHoriz)}
             `;
 
-            document.getElementById('modalRecoilDesc').innerHTML = highlightText(item.recoilDesc);
+            document.getElementById('modalRecoilDesc').innerHTML = `<strong>반동 상세:</strong> ${highlightText(item.recoilDesc)}`;
             toggleModal(true);
         }
 
