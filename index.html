@@ -944,60 +944,76 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <h2 style="font-size: 1.1rem; font-weight: 800; color: var(--card-title);">실시간 로드아웃 빌더</h2>
                 </div>
-                
+
                 <div class="selector-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <!-- 총기 종류 선택 슬롯 -->
                     <div style="display: flex; flex-direction: column; gap: 3px;">
-                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">총기 종류</span>
+                        <span
+                            style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">총기
+                            종류</span>
                         <div class="custom-select-wrapper" id="simCategoryWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simCategoryTrigger" style="padding: 8px 10px; font-size: 0.8rem;">계열 선택</div>
+                            <div class="custom-select-trigger" id="simCategoryTrigger"
+                                style="padding: 8px 10px; font-size: 0.8rem;">계열 선택</div>
                             <div class="custom-options" id="simCategoryOptions"></div>
                         </div>
                     </div>
 
                     <!-- 베이스 총기 선택 슬롯 -->
                     <div style="display: flex; flex-direction: column; gap: 3px;">
-                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">베이스 총기</span>
+                        <span
+                            style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">베이스
+                            총기</span>
                         <div class="custom-select-wrapper" id="simWeaponWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simWeaponTrigger" style="padding: 8px 10px; font-size: 0.8rem;">총기 선택</div>
+                            <div class="custom-select-trigger" id="simWeaponTrigger"
+                                style="padding: 8px 10px; font-size: 0.8rem;">총기 선택</div>
                             <div class="custom-options" id="simWeaponOptions"></div>
                         </div>
                     </div>
-                    
+
                     <!-- 머즐 / 소음기 슬롯 -->
                     <div style="display: flex; flex-direction: column; gap: 3px;">
-                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">머즐 / 소음기</span>
+                        <span
+                            style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">머즐
+                            / 소음기</span>
                         <div class="custom-select-wrapper" id="simMuzzleWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simMuzzleTrigger" style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
+                            <div class="custom-select-trigger" id="simMuzzleTrigger"
+                                style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
                             <div class="custom-options" id="simMuzzleOptions"></div>
                         </div>
                     </div>
 
                     <!-- 그립 슬롯 -->
                     <div style="display: flex; flex-direction: column; gap: 3px;">
-                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">그립 슬롯</span>
+                        <span
+                            style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">그립
+                            슬롯</span>
                         <div class="custom-select-wrapper" id="simGripWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simGripTrigger" style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
+                            <div class="custom-select-trigger" id="simGripTrigger"
+                                style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
                             <div class="custom-options" id="simGripOptions"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 총기 유틸리티 정보 및 대미지 카드 -->
-                <div class="glass-panel" id="simStatsCard" style="margin-top: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem;">
+                <div class="glass-panel" id="simStatsCard"
+                    style="margin-top: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem;">
                     <!-- JS에서 동적 로드 -->
                 </div>
 
                 <!-- 비교 시뮬레이션 그래프 -->
                 <div class="glass-panel" style="margin-top: 10px; padding: 14px;">
-                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--card-title); margin-bottom: 12px; border-bottom: 1px dashed var(--border-glass); padding-bottom: 6px;">실시간 연산 반동 그래프 (순정 vs 튜닝)</div>
+                    <div
+                        style="font-size: 0.8rem; font-weight: 800; color: var(--card-title); margin-bottom: 12px; border-bottom: 1px dashed var(--border-glass); padding-bottom: 6px;">
+                        실시간 연산 반동 그래프 (순정 vs 튜닝)</div>
                     <div id="simStatBars" style="display: flex; flex-direction: column; gap: 12px;">
                         <!-- JS에서 동적 렌더링 -->
                     </div>
                 </div>
 
                 <!-- 장착한 부착물 설명 카드 -->
-                <div class="glass-panel" id="simPartsCard" style="margin-top: 10px; padding: 12px; display: none; flex-direction: column; gap: 8px; font-size: 0.8rem;">
+                <div class="glass-panel" id="simPartsCard"
+                    style="margin-top: 10px; padding: 12px; display: none; flex-direction: column; gap: 8px; font-size: 0.8rem;">
                     <!-- JS에서 동적 로드 -->
                 </div>
             </div>
@@ -1020,7 +1036,8 @@
             </button>
             <button class="nav-btn" onclick="switchTab('simulator', event)">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                    <path
+                        d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
                 </svg>
                 시뮬레이터
             </button>
@@ -1483,7 +1500,7 @@
 
         async function loadWeaponsData() {
             try {
-                const fetchPromises = categories.map(cat => 
+                const fetchPromises = categories.map(cat =>
                     fetch(`./weapons/${cat}.json`)
                         .then(res => res.ok ? res.json() : [])
                         .then(data => data.map(w => ({ ...w, catKey: cat })))
@@ -2086,7 +2103,7 @@
             };
 
             const showDepthRow = (item1.modelTransDepth && item1.modelTransDepth !== "변화 없음") ||
-                                 (item2.modelTransDepth && item2.modelTransDepth !== "변화 없음");
+                (item2.modelTransDepth && item2.modelTransDepth !== "변화 없음");
             let depthRowHtml = "";
             if (showDepthRow) {
                 depthRowHtml = `
@@ -2271,11 +2288,11 @@
                     e.stopPropagation();
                     selectedSimCategory = cat;
                     categoryWrapper.classList.remove('open');
-                    
+
                     // 카테고리 변경 시, 첫 번째 총기로 자동 바인딩
                     const firstWeaponOfCat = weapons.find(w => w.catKey === cat);
                     selectedSimWeapon = firstWeaponOfCat ? firstWeaponOfCat.id : "";
-                    
+
                     initSimulator();
                 });
                 categoryOptions.appendChild(opt);
@@ -2291,7 +2308,7 @@
 
             // 2. 현재 선택된 계열에 필터링된 총기 목록
             const filteredWeapons = weapons.filter(w => w.catKey === selectedSimCategory);
-            
+
             // 현재 선택된 총기 바인딩
             const currentWeapon = filteredWeapons.find(w => w.id === selectedSimWeapon) || filteredWeapons[0];
             if (!currentWeapon) {
@@ -2342,7 +2359,7 @@
 
             // 1. 머즐 슬롯 옵션 생성
             muzzleOptions.innerHTML = "";
-            
+
             const noneMuzzleOpt = document.createElement('div');
             noneMuzzleOpt.className = `custom-option ${selectedSimMuzzle === "none" ? 'selected' : ''}`;
             noneMuzzleOpt.innerText = "순정 (None)";
@@ -2556,7 +2573,7 @@
                     <div style="width: 44%; display: flex; flex-direction: column; justify-content: center; line-height: 1.25;">
                         <span style="color: var(--card-title); font-size: 0.72rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${label}</span>
                         <span style="color: var(--text-muted); font-size: 0.64rem; white-space: nowrap;">
-                            ${baseVal.toFixed(2)} <span style="font-size: 0.6rem; opacity: 0.7;">➡</span> <strong style="color: var(--card-title); font-weight: 800;">${finalVal.toFixed(2)}</strong>${changeText}
+                            ${baseVal.toFixed(2)} <span style="font-size: 0.6rem; opacity: 0.7;">→</span> <strong style="color: var(--card-title); font-weight: 800;">${finalVal.toFixed(2)}</strong>${changeText}
                         </span>
                     </div>
                     <!-- Right: The Bar -->
