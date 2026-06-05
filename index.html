@@ -941,43 +941,44 @@
         <!-- [탭 3] 로드아웃 시뮬레이터 -->
         <main id="simulatorTab" class="tab-content">
             <div class="glass-panel compare-grid">
-                <h2 style="font-weight: 800; color: var(--card-title); margin-bottom: 4px;">실시간 로드아웃 빌더</h2>
-                <p style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 12px;">총기와 부착물을 선택하여 최종 연산 반동과 스탯 변화를 실시간으로 비교해보세요.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h2 style="font-size: 1.1rem; font-weight: 800; color: var(--card-title);">실시간 로드아웃 빌더</h2>
+                </div>
                 
-                <div class="selector-box" style="flex-direction: column; gap: 8px;">
+                <div class="selector-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <!-- 총기 종류 선택 슬롯 -->
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">총기 종류 (계열)</span>
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">총기 종류</span>
                         <div class="custom-select-wrapper" id="simCategoryWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simCategoryTrigger">계열 선택</div>
+                            <div class="custom-select-trigger" id="simCategoryTrigger" style="padding: 8px 10px; font-size: 0.8rem;">계열 선택</div>
                             <div class="custom-options" id="simCategoryOptions"></div>
                         </div>
                     </div>
 
                     <!-- 베이스 총기 선택 슬롯 -->
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">베이스 총기</span>
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">베이스 총기</span>
                         <div class="custom-select-wrapper" id="simWeaponWrapper" style="width: 100%;">
-                            <div class="custom-select-trigger" id="simWeaponTrigger">총기 선택</div>
+                            <div class="custom-select-trigger" id="simWeaponTrigger" style="padding: 8px 10px; font-size: 0.8rem;">총기 선택</div>
                             <div class="custom-options" id="simWeaponOptions"></div>
                         </div>
                     </div>
                     
-                    <!-- 부착물 장착 슬롯 2개 -->
-                    <div style="display: flex; gap: 10px; margin-top: 4px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px; width: 50%;">
-                            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">머즐 / 소음기 슬롯</span>
-                            <div class="custom-select-wrapper" id="simMuzzleWrapper" style="width: 100%;">
-                                <div class="custom-select-trigger" id="simMuzzleTrigger">순정 (None)</div>
-                                <div class="custom-options" id="simMuzzleOptions"></div>
-                            </div>
+                    <!-- 머즐 / 소음기 슬롯 -->
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">머즐 / 소음기</span>
+                        <div class="custom-select-wrapper" id="simMuzzleWrapper" style="width: 100%;">
+                            <div class="custom-select-trigger" id="simMuzzleTrigger" style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
+                            <div class="custom-options" id="simMuzzleOptions"></div>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px; width: 50%;">
-                            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">그립 슬롯</span>
-                            <div class="custom-select-wrapper" id="simGripWrapper" style="width: 100%;">
-                                <div class="custom-select-trigger" id="simGripTrigger">순정 (None)</div>
-                                <div class="custom-options" id="simGripOptions"></div>
-                            </div>
+                    </div>
+
+                    <!-- 그립 슬롯 -->
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-left: 2px;">그립 슬롯</span>
+                        <div class="custom-select-wrapper" id="simGripWrapper" style="width: 100%;">
+                            <div class="custom-select-trigger" id="simGripTrigger" style="padding: 8px 10px; font-size: 0.8rem;">순정 (None)</div>
+                            <div class="custom-options" id="simGripOptions"></div>
                         </div>
                     </div>
                 </div>
@@ -2449,22 +2450,18 @@
             const grip = dataset.find(i => i.id === selectedSimGrip);
 
             simStatsCard.innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                    <div>
-                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">총기 계열</div>
-                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.category}</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px; width: 100%; justify-content: space-between; font-size: 0.68rem; font-weight: 700;">
+                    <div style="background: var(--chip-bg); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--border-glass); flex: 1 1 calc(50% - 4px); min-width: 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span style="color: var(--text-muted);">계열:</span> <span style="color: var(--card-title);">${weapon.category}</span>
                     </div>
-                    <div>
-                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">연사 속도 (RPM)</div>
-                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.firerate}</div>
+                    <div style="background: var(--chip-bg); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--border-glass); flex: 1 1 calc(50% - 4px); min-width: 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span style="color: var(--text-muted);">연사:</span> <span style="color: var(--card-title);">${weapon.firerate}</span>
                     </div>
-                    <div>
-                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">기본 대미지 / 사거리</div>
-                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.maxDamage} ~ ${weapon.minDamage} (${weapon.baseStats.minRange}~${weapon.baseStats.maxRange} studs)</div>
+                    <div style="background: var(--chip-bg); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--border-glass); flex: 1 1 calc(50% - 4px); min-width: 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span style="color: var(--text-muted);">대미지:</span> <span style="color: var(--card-title);">${weapon.maxDamage}~${weapon.minDamage} (${weapon.baseStats.minRange}~${weapon.baseStats.maxRange})</span>
                     </div>
-                    <div>
-                        <div style="color: var(--text-muted); font-size: 0.68rem; font-weight: 700;">탄속 / 기동 조준속도</div>
-                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--card-title);">${weapon.baseStats.muzzleVelocity} studs/s | 조준: ${weapon.baseStats.adsSpeed} frames</div>
+                    <div style="background: var(--chip-bg); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--border-glass); flex: 1 1 calc(50% - 4px); min-width: 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span style="color: var(--text-muted);">탄속/ADS:</span> <span style="color: var(--card-title);">${weapon.baseStats.muzzleVelocity}s | ${weapon.baseStats.adsSpeed}f</span>
                     </div>
                 </div>
             `;
@@ -2544,31 +2541,32 @@
             let barColor = "var(--accent-color)";
 
             if (diffPct < -0.01) {
-                changeText = `<span style="color: var(--benefit-text); font-weight: 800; font-size: 0.74rem; margin-left: 6px;">↓${Math.abs(diffPct).toFixed(1)}%</span>`;
+                changeText = `<span style="color: var(--benefit-text); font-weight: 800; font-size: 0.65rem; margin-left: 4px;">↓${Math.abs(diffPct).toFixed(1)}%</span>`;
                 barColor = "var(--benefit-text)";
             } else if (diffPct > 0.01) {
-                changeText = `<span style="color: var(--penalty-text); font-weight: 800; font-size: 0.74rem; margin-left: 6px;">↑${Math.abs(diffPct).toFixed(1)}%</span>`;
+                changeText = `<span style="color: var(--penalty-text); font-weight: 800; font-size: 0.65rem; margin-left: 4px;">↑${Math.abs(diffPct).toFixed(1)}%</span>`;
                 barColor = "var(--penalty-text)";
             } else {
-                changeText = `<span style="color: var(--text-muted); font-size: 0.74rem; margin-left: 6px;">-</span>`;
+                changeText = `<span style="color: var(--text-muted); font-size: 0.65rem; margin-left: 4px;">-</span>`;
             }
 
             return `
-                <div class="sim-bar-item" style="display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700;">
-                        <span style="color: var(--card-title);">${label}</span>
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <span style="color: var(--text-muted); font-size: 0.72rem;">${baseVal.toFixed(2)}</span>
-                            <span style="color: var(--text-muted); font-size: 0.68rem;">➡</span>
-                            <span style="font-weight: 800; color: var(--card-title);">${finalVal.toFixed(2)}</span>
-                            ${changeText}
-                        </div>
+                <div class="sim-bar-item" style="display: flex; gap: 10px; align-items: center; min-height: 28px;">
+                    <!-- Left: Label & Values -->
+                    <div style="width: 44%; display: flex; flex-direction: column; justify-content: center; line-height: 1.25;">
+                        <span style="color: var(--card-title); font-size: 0.72rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${label}</span>
+                        <span style="color: var(--text-muted); font-size: 0.64rem; white-space: nowrap;">
+                            ${baseVal.toFixed(2)} <span style="font-size: 0.6rem; opacity: 0.7;">➡</span> <strong style="color: var(--card-title); font-weight: 800;">${finalVal.toFixed(2)}</strong>${changeText}
+                        </span>
                     </div>
-                    <div style="position: relative; height: 8px; background: var(--chip-bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-glass);">
-                        <!-- Base marker -->
-                        <div style="position: absolute; top: 0; bottom: 0; left: 0; width: ${basePct}%; background: var(--sim-base-bar); border-radius: 2px; border-right: 1.5px solid var(--sim-base-border); z-index: 1;"></div>
-                        <!-- Final simulated active bar -->
-                        <div class="sim-fill-bar" data-width="${finalPct}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 0%; background: ${barColor}; border-radius: 2px; transition: all 0.2s ease; z-index: 2;"></div>
+                    <!-- Right: The Bar -->
+                    <div style="width: 56%; display: flex; align-items: center;">
+                        <div style="position: relative; width: 100%; height: 6px; background: var(--chip-bg); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <!-- Base marker -->
+                            <div style="position: absolute; top: 0; bottom: 0; left: 0; width: ${basePct}%; background: var(--sim-base-bar); border-radius: 2px; border-right: 1.5px solid var(--sim-base-border); z-index: 1;"></div>
+                            <!-- Final simulated active bar -->
+                            <div class="sim-fill-bar" data-width="${finalPct}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 0%; background: ${barColor}; border-radius: 2px; transition: all 0.2s ease; z-index: 2;"></div>
+                        </div>
                     </div>
                 </div>
             `;
