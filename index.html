@@ -1088,6 +1088,18 @@
                 </div>
             </div>
 
+            <div id="modalCompat"
+                style="display: none; flex-direction: column; gap: 4px; background: rgba(230, 126, 34, 0.15); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(230, 126, 34, 0.35); margin-top: 8px;">
+                <div
+                    style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #e67e22;">
+                    <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">장착 호환성:</span>
+                    <span style="font-weight: 800;">PDW (SMG) 전용</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-color); opacity: 0.9; line-height: 1.4; padding-left: 4px;">
+                    이 부착물은 개인방어화기(PDW) 계열 무기에만 장착이 가능한 전용 규격입니다.
+                </div>
+            </div>
+
             <div class="markdown-block" id="modalAdvancedText"
                 style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
 
@@ -1176,7 +1188,7 @@
                 name: "COMPED SUPPRESSOR",
                 category: "소음기",
                 noiseRange: "80스터드 밖 차단",
-                noiseDesc: "소음 전파 범위가 다소 넓은 편이지만, 탄속과 대미지 사거리 버프를 동시에 제공하며 전반적인 반동 제어력이 우수합니다.",
+                noiseDesc: "소음 전파 범위가 다소 넓은 편입니다.",
                 oneLiner: "조작 속도 및 기본/조준 시 이동 속도 감소와 다소 넓은 노출 범위 대신 탄속 및 대미지 사거리 증가와 물리 반동 및 화면 흔들림 제어를 가져가는 맞교환 구조에 적합.",
                 advanced: "80스터드 밖에서 노출되지 않습니다. 대신 탄속이 3.5% 증가하고 대미지 사거리가 2.5% 증가하며, 흔들림(Sway)은 5% 안정됩니다. 다만 패널티로 조작 속도가 7.5% 감소하고, 기본 이동 속도가 2% 감소, 조준 시 이동 속도가 7% 감소합니다.",
                 modelTransVert: "5% 감소",
@@ -1186,6 +1198,24 @@
                 camVert: "5% 감소",
                 camHoriz: "5% 감소",
                 recoilDesc: "물리 반동 제어력이 높지 않으나, 격발 시 총기가 튀는 수직/수평 물리 반동과 모든 화면 흔들림 진동을 고르게 완화해 줍니다."
+            },
+            {
+                id: "osprey",
+                tags: [],
+                name: "OSPREY SUPPRESSOR",
+                category: "소음기",
+                compatibility: ["pdw"],
+                noiseRange: "35스터드 밖 차단",
+                noiseDesc: "좁은 레이더 노출 범위를 보장합니다.",
+                oneLiner: "조작 속도 및 기동성의 대폭 감소 대신 패널티 없는 탄속/사거리 보존과 매우 뛰어난 소음 효과 및 지향사격 정확도를 취하는 맞교환 구조에 적합.",
+                advanced: "35스터드 밖에서 노출되지 않습니다. 지향사격 복원 속도와 집탄 복원력(Damping)이 일괄 20% 크게 상승하여 지향사격 시 명중률이 비약적으로 강화됩니다. 단, 패널티로 총기를 꺼내는 속도가 20% 대폭 감소하고 조준 속도가 10% 감소하며, 기본 이동 속도가 7%, 조준 시 이동 속도가 11% 감소합니다.",
+                modelTransVert: "변화 없음",
+                modelTransHoriz: "변화 없음",
+                modelRotVert: "변화 없음",
+                modelRotHoriz: "변화 없음",
+                camVert: "변화 없음",
+                camHoriz: "변화 없음",
+                recoilDesc: "물리적인 총기 반동 및 시각적인 화면 흔들림 수치에 변화를 주지 않으며 순정 상태의 반동감을 그대로 유지합니다."
             },
             {
                 id: "muffler",
@@ -1587,7 +1617,7 @@
         const searchInput = document.getElementById('searchInput');
         const attachmentOrder = [
             { key: "muzzle", title: "Barrel · Muzzle", ids: ["flashhider", "compensator", "muzzlebrake", "tbreak", "xring", "halbek", "loudner", "muzzlebooster"] },
-            { key: "suppressor", title: "Barrel · Suppressor", ids: ["duty", "light", "medium", "heavy", "comped", "muffler", "oilfilter"] },
+            { key: "suppressor", title: "Barrel · Suppressor", ids: ["duty", "light", "medium", "heavy", "comped", "osprey", "muffler", "oilfilter"] },
             { key: "grip", title: "Grip", ids: ["vertical", "angled", "potato", "skeleton", "folding", "stubby", "pistol", "sideways", "chainsaw"] }
         ];
         const categoryMap = {
@@ -1723,6 +1753,9 @@
                     const noiseBadgeHtml = hasActiveNoiseSuppression
                         ? `<span class="badge" style="background: var(--badge-green); color: var(--benefit-text); border-color: rgba(46, 204, 113, 0.35); font-weight: 700;">🔕 ${item.noiseRange.replace(" 밖 차단", "")}</span>`
                         : '';
+                    const compatBadgeHtml = item.compatibility
+                        ? `<span class="badge" style="background: rgba(230, 126, 34, 0.15); color: #e67e22; border-color: rgba(230, 126, 34, 0.35); font-weight: 700;">PDW 전용</span>`
+                        : '';
 
                     const card = document.createElement('div');
                     card.className = "item-card";
@@ -1732,6 +1765,7 @@
                             <span class="item-card-title" style="flex: 1;">${escapeHtml(item.name)}</span>
                             <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
                                 <span class="badge">${escapeHtml(item.category)}</span>
+                                ${compatBadgeHtml}
                                 ${noiseBadgeHtml}
                             </div>
                         </div>
@@ -1869,6 +1903,13 @@
                 document.getElementById('modalNoiseDesc').innerHTML = highlightText(item.noiseDesc || "");
             } else {
                 noiseRangeEl.style.display = 'none';
+            }
+
+            const compatEl = document.getElementById('modalCompat');
+            if (item.compatibility) {
+                compatEl.style.display = 'flex';
+            } else {
+                compatEl.style.display = 'none';
             }
 
             const depthBarHtml = (item.modelTransDepth && item.modelTransDepth !== "변화 없음")
@@ -2102,6 +2143,19 @@
                 `;
             };
 
+            const getCompareCompatBlock = (item) => {
+                if (!item.compatibility) return "";
+                return `
+                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; background: rgba(230, 126, 34, 0.1); border-radius: 8px; border: 1px solid rgba(230, 126, 34, 0.35);">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #e67e22; display: flex; align-items: center; gap: 4px;">
+                            <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">장착 호환성:</span>
+                            <span>PDW (SMG) 전용</span>
+                        </div>
+                        <div style="font-size: 0.78rem; opacity: 0.85; line-height: 1.3;">이 부착물은 개인방어화기(PDW) 계열의 무기에만 장착할 수 있습니다.</div>
+                    </div>
+                `;
+            };
+
             const showDepthRow = (item1.modelTransDepth && item1.modelTransDepth !== "변화 없음") ||
                 (item2.modelTransDepth && item2.modelTransDepth !== "변화 없음");
             let depthRowHtml = "";
@@ -2169,11 +2223,13 @@
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item1.name} 성향</div>
                     <div>${highlightText(item1.advanced)}</div>
                     ${getCompareNoiseBlock(item1)}
+                    ${getCompareCompatBlock(item1)}
                 </div>
                 <div class="glass-panel markdown-block" style="margin-top: 10px; padding: 12px;">
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item2.name} 성향</div>
                     <div>${highlightText(item2.advanced)}</div>
                     ${getCompareNoiseBlock(item2)}
+                    ${getCompareCompatBlock(item2)}
                 </div>
             `;
         }
@@ -2289,6 +2345,16 @@
                     selectedSimCategory = cat;
                     categoryWrapper.classList.remove('open');
 
+                    // 호환성 검사 및 탈착 처리
+                    const curMuzzle = dataset.find(i => i.id === selectedSimMuzzle);
+                    if (curMuzzle && curMuzzle.compatibility && !curMuzzle.compatibility.includes(cat)) {
+                        selectedSimMuzzle = "none";
+                    }
+                    const curGrip = dataset.find(i => i.id === selectedSimGrip);
+                    if (curGrip && curGrip.compatibility && !curGrip.compatibility.includes(cat)) {
+                        selectedSimGrip = "none";
+                    }
+
                     // 카테고리 변경 시, 첫 번째 총기로 자동 바인딩
                     const firstWeaponOfCat = weapons.find(w => w.catKey === cat);
                     selectedSimWeapon = firstWeaponOfCat ? firstWeaponOfCat.id : "";
@@ -2372,7 +2438,11 @@
             });
             muzzleOptions.appendChild(noneMuzzleOpt);
 
-            const muzzleAttachments = dataset.filter(item => item.category === "머즐" || item.category === "소음기");
+            const muzzleAttachments = dataset.filter(item => {
+                if (item.category !== "머즐" && item.category !== "소음기") return false;
+                if (item.compatibility && !item.compatibility.includes(selectedSimCategory)) return false;
+                return true;
+            });
             muzzleAttachments.forEach(item => {
                 const opt = document.createElement('div');
                 opt.className = `custom-option ${item.id === selectedSimMuzzle ? 'selected' : ''}`;
@@ -2416,7 +2486,11 @@
             });
             gripOptions.appendChild(noneGripOpt);
 
-            const gripAttachments = dataset.filter(item => item.category === "그립");
+            const gripAttachments = dataset.filter(item => {
+                if (item.category !== "그립") return false;
+                if (item.compatibility && !item.compatibility.includes(selectedSimCategory)) return false;
+                return true;
+            });
             gripAttachments.forEach(item => {
                 const opt = document.createElement('div');
                 opt.className = `custom-option ${item.id === selectedSimGrip ? 'selected' : ''}`;

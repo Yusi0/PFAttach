@@ -112,5 +112,174 @@
       "minRange": 60,
       "maxRange": 120
     }
+  },
+  {
+    "id": "mk16socom",
+    "name": "MK16 SOCOM",
+    "category": "AR(돌격소총)",
+    "maxDamage": 33,
+    "minDamage": 25,
+    "firerate": "650",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.60,
+      "modelTransHoriz": 0.00,
+      "modelTransDepth": 7.20,
+      "modelRotVert": -1.00,
+      "modelRotHoriz": 0.30,
+      "camVert": 0.90,
+      "camHoriz": -0.16
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14,
+      "muzzleVelocity": 2900,
+      "minRange": 60,
+      "maxRange": 140
+    }
+  },
+  {
+    "id": "uara1",
+    "name": "UAR A1",
+    "category": "AR(돌격소총)",
+    "maxDamage": 30,
+    "minDamage": 24,
+    "firerate": "680",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.50,
+      "modelTransHoriz": 0.00,
+      "modelTransDepth": 6.20,
+      "modelRotVert": -0.40,
+      "modelRotHoriz": 0.00,
+      "camVert": 1.60,
+      "camHoriz": -0.30
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 13.5,
+      "muzzleVelocity": 3200,
+      "minRange": 65,
+      "maxRange": 185
+    }
+  },
+  {
+    "id": "m16a4",
+    "name": "M16A4",
+    "category": "AR(돌격소총)",
+    "maxDamage": 34,
+    "minDamage": 22,
+    "firerate": "900",
+    "fireModes": [
+      "BURST",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": 0.20,
+      "modelTransHoriz": 0.20,
+      "modelTransDepth": 8.00,
+      "modelRotVert": 0.20,
+      "modelRotHoriz": 0.10,
+      "camVert": 2.10,
+      "camHoriz": 0.00
+    },
+    "baseStats": {
+      "adsSpeed": 14,
+      "walkSpeed": 14,
+      "muzzleVelocity": 3100,
+      "minRange": 40,
+      "maxRange": 150
+    }
+  },
+  {
+    "id": "stg91",
+    "name": "STG-91",
+    "category": "AR(돌격소총)",
+    "maxDamage": 31,
+    "minDamage": 23,
+    "firerate": "750",
+    "fireModes": [
+      "AUTO",
+      "BURST",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.20,
+      "modelTransHoriz": 0.00,
+      "modelTransDepth": 8.63,
+      "modelRotVert": 0.60,
+      "modelRotHoriz": 0.00,
+      "camVert": 1.45,
+      "camHoriz": 0.00
+    },
+    "baseStats": {
+      "adsSpeed": 12,
+      "walkSpeed": 14,
+      "muzzleVelocity": 2700,
+      "minRange": 80,
+      "maxRange": 160
+    }
+  },
+  {
+    "id": "m16a1",
+    "name": "M16A1",
+    "category": "AR(돌격소총)",
+    "maxDamage": 30,
+    "minDamage": 20,
+    "firerate": "950",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": 0.20,
+      "modelTransHoriz": 0.05,
+      "modelTransDepth": 6.83,
+      "modelRotVert": 0.12,
+      "modelRotHoriz": 0.06,
+      "camVert": 2.05,
+      "camHoriz": 0.01
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14.5,
+      "muzzleVelocity": 3200,
+      "minRange": 90,
+      "maxRange": 150
+    }
+  },
+  {
+    "id": "m16a3",
+    "name": "M16A3",
+    "category": "AR(돌격소총)",
+    "maxDamage": 32,
+    "minDamage": 22,
+    "firerate": "800",
+    "fireModes": [
+      "AUTO",
+      "SEMI"
+    ],
+    "baseRecoil": {
+      "modelTransVert": -0.15,
+      "modelTransHoriz": 2.00,
+      "modelTransDepth": 5.50,
+      "modelRotVert": 0.30,
+      "modelRotHoriz": 0.00,
+      "camVert": 1.80,
+      "camHoriz": 0.08
+    },
+    "baseStats": {
+      "adsSpeed": 15,
+      "walkSpeed": 14,
+      "muzzleVelocity": 3100,
+      "minRange": 80,
+      "maxRange": 135
+    }
   }
 ]
