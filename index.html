@@ -1109,25 +1109,19 @@
                 </div>
                 
                 <!-- 설명 탭 컨테이너 -->
-                <div id="modalDescContainer" style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                <div id="modalDescContainer" style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px; overflow: hidden; width: 100%;">
                     <!-- 탭 버튼 헤더 -->
                     <div id="modalDescTabs" style="display: flex; gap: 4px; border-bottom: 1px solid var(--border-glass); padding-bottom: 2px;">
-                        <button id="tabIngameBtn" class="desc-tab-btn active" onclick="switchDescTab('ingame')">공식 설명</button>
-                        <button id="tabRecoilBtn" class="desc-tab-btn" onclick="switchDescTab('recoil')">수치 분석</button>
+                        <!-- JS에서 동적으로 버튼 추가 -->
                     </div>
-                    <!-- 인게임 설명 번역 툴팁 -->
-                    <div id="modalIngameDesc"
-                        style="display: none; font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; font-style: italic; border-left: 3px solid var(--accent-color);">
-                    </div>
-                    <!-- 반동 분석 설명 -->
-                    <div id="modalRecoilDesc"
-                        style="display: none; font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; border-left: 3px solid var(--accent-color);">
+                    <!-- 슬라이더 영역 -->
+                    <div id="modalDescSliderWrapper" style="width: 100%; overflow: hidden; position: relative;">
+                        <div id="modalDescSlider" style="display: flex; width: 100%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform;">
+                            <!-- JS에서 동적으로 슬라이드 패널 추가 -->
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="markdown-block" id="modalAdvancedText"
-                style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
             <div class="glass-panel" id="modalStatBars"
                 style="padding: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 12px;">
                 <!-- JavaScript를 통해 동적 렌더링 -->
@@ -1924,35 +1918,32 @@
             `;
         }
 
+        let activeTabs = [];
+
         function switchDescTab(tab) {
-            const ingameEl = document.getElementById('modalIngameDesc');
-            const recoilEl = document.getElementById('modalRecoilDesc');
-            const ingameBtn = document.getElementById('tabIngameBtn');
-            const recoilBtn = document.getElementById('tabRecoilBtn');
+            const idx = activeTabs.indexOf(tab);
+            if (idx === -1) return;
 
-            if (!ingameEl || !recoilEl || !ingameBtn || !recoilBtn) return;
-
-            if (tab === 'ingame') {
-                ingameEl.style.display = 'block';
-                recoilEl.style.display = 'none';
-                ingameBtn.classList.add('active');
-                recoilBtn.classList.remove('active');
-            } else {
-                ingameEl.style.display = 'none';
-                recoilEl.style.display = 'block';
-                ingameBtn.classList.remove('active');
-                recoilBtn.classList.add('active');
+            const slider = document.getElementById('modalDescSlider');
+            if (slider) {
+                const step = 100 / activeTabs.length;
+                slider.style.transform = `translateX(-${idx * step}%)`;
             }
+
+            activeTabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (btn) {
+                    btn.classList.toggle('active', t === tab);
+                }
+            });
         }
 
         function openDetail(item) {
             document.getElementById('modalTitle').innerText = item.name;
             document.getElementById('modalOneLiner').innerHTML = highlightText(item.oneLiner);
-            document.getElementById('modalAdvancedText').innerHTML = `<strong>일반 상세:</strong> ${highlightText(item.advanced)}`;
 
             const officialInfoEl = document.getElementById('modalOfficialInfo');
             const badgesEl = document.getElementById('modalOfficialBadges');
-            const ingameDescEl = document.getElementById('modalIngameDesc');
 
             badgesEl.innerHTML = "";
             let hasAnyBadge = false;
@@ -1978,37 +1969,76 @@
                 hasAnyBadge = true;
             }
 
-            // 4. 설명 탭 설정 (인게임 설명 및 반동 분석)
-            const recoilDescEl = document.getElementById('modalRecoilDesc');
+            // 4. 설명 탭 동적 설정 (공식 설명, 일반 상세, 반동 상세)
+            activeTabs = [];
+            if (item.ingameDesc && item.ingameDesc.trim() !== "") activeTabs.push('ingame');
+            if (item.advanced && item.advanced.trim() !== "") activeTabs.push('advanced');
+            if (item.recoilDesc && item.recoilDesc.trim() !== "") activeTabs.push('recoil');
+
             const tabsEl = document.getElementById('modalDescTabs');
+            const sliderEl = document.getElementById('modalDescSlider');
             const descContainerEl = document.getElementById('modalDescContainer');
 
-            const hasIngame = !!(item.ingameDesc && item.ingameDesc.trim() !== "");
-            const hasRecoil = !!(item.recoilDesc && item.recoilDesc.trim() !== "");
+            tabsEl.innerHTML = "";
+            sliderEl.innerHTML = "";
 
-            ingameDescEl.innerHTML = hasIngame ? highlightText(item.ingameDesc) : "";
-            recoilDescEl.innerHTML = hasRecoil ? `<strong>반동 분석:</strong> ${highlightText(item.recoilDesc)}` : "";
+            if (activeTabs.length > 0) {
+                descContainerEl.style.display = 'flex';
+                
+                // 슬라이더 스타일 초기화
+                sliderEl.style.width = `${activeTabs.length * 100}%`;
+                sliderEl.style.transform = `translateX(0%)`;
 
-            if (hasIngame && hasRecoil) {
-                descContainerEl.style.display = 'flex';
-                tabsEl.style.display = 'flex';
-                switchDescTab('ingame');
-            } else if (hasIngame) {
-                descContainerEl.style.display = 'flex';
-                tabsEl.style.display = 'none';
-                ingameDescEl.style.display = 'block';
-                recoilDescEl.style.display = 'none';
-            } else if (hasRecoil) {
-                descContainerEl.style.display = 'flex';
-                tabsEl.style.display = 'none';
-                ingameDescEl.style.display = 'none';
-                recoilDescEl.style.display = 'block';
+                const paneWidth = (100 / activeTabs.length).toFixed(4) + '%';
+
+                activeTabs.forEach((tab) => {
+                    let label = "";
+                    let contentHtml = "";
+                    
+                    if (tab === 'ingame') {
+                        label = "공식 설명";
+                        contentHtml = `<div style="font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; font-style: italic; border-left: 3px solid var(--accent-color); height: 100%; box-sizing: border-box;">${highlightText(item.ingameDesc)}</div>`;
+                    } else if (tab === 'advanced') {
+                        label = "일반 상세";
+                        contentHtml = `<div style="font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; border-left: 3px solid var(--accent-color); height: 100%; box-sizing: border-box;"><strong>일반 스펙 상세:</strong><br>${highlightText(item.advanced)}</div>`;
+                    } else if (tab === 'recoil') {
+                        label = "반동 상세";
+                        contentHtml = `<div style="font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; border-left: 3px solid var(--accent-color); height: 100%; box-sizing: border-box;"><strong>반동 분석:</strong><br>${highlightText(item.recoilDesc)}</div>`;
+                    }
+
+                    // 탭 버튼 생성
+                    const btn = document.createElement('button');
+                    btn.id = `tab-${tab}`;
+                    btn.className = `desc-tab-btn ${activeTabs[0] === tab ? 'active' : ''}`;
+                    btn.innerText = label;
+                    btn.onclick = () => switchDescTab(tab);
+                    tabsEl.appendChild(btn);
+
+                    // 슬라이드 패널 생성
+                    const pane = document.createElement('div');
+                    pane.style.width = paneWidth;
+                    pane.style.flexShrink = "0";
+                    pane.style.boxSizing = "border-box";
+                    pane.style.padding = "2px";
+                    pane.innerHTML = contentHtml;
+                    sliderEl.appendChild(pane);
+                });
+
+                // 탭 버튼 헤더 표시 여부
+                if (activeTabs.length <= 1) {
+                    tabsEl.style.display = 'none';
+                } else {
+                    tabsEl.style.display = 'flex';
+                }
+
+                // 첫 번째 탭 활성화 상태
+                switchDescTab(activeTabs[0]);
             } else {
                 descContainerEl.style.display = 'none';
             }
 
-            // 공식 정보 카드 노출 여부 (배지가 있거나, 설명 탭이 활성화된 경우)
-            if (hasAnyBadge || hasIngame || hasRecoil) {
+            // 공식 정보 카드 노출 여부 (배지가 있거나, 설명 탭이 하나라도 있는 경우)
+            if (hasAnyBadge || activeTabs.length > 0) {
                 officialInfoEl.style.display = 'flex';
             } else {
                 officialInfoEl.style.display = 'none';
