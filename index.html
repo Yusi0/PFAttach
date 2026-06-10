@@ -1075,165 +1075,43 @@
                 style="color: var(--text-color); font-weight: 800; line-height: 1.4; margin-top: 6px; margin-bottom: 6px; font-size: 0.95rem;">
                 한 줄 요약</div>
 
-            <div id="modalNoiseRange"
-                style="display: none; flex-direction: column; gap: 4px; background: var(--badge-green); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-glass); margin-top: 8px;">
-                <div
-                    style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--benefit-text);">
-                    <span style="font-size: 1.1rem;">🔕</span>
-                    <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">소음 감지 범위:</span>
-                    <span id="modalNoiseRangeVal" style="font-weight: 800;"></span>
+            
+            <div id="modalOfficialInfo"
+                style="display: none; flex-direction: column; gap: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 16px; border: 1px solid var(--border-glass); padding: 12px; margin-top: 8px;">
+                <!-- 배지 정렬 라인 -->
+                <div id="modalOfficialBadges" style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.76rem; font-weight: 700;">
+                    <!-- JS에서 동적으로 채움 -->
                 </div>
-                <div id="modalNoiseDesc"
-                    style="font-size: 0.8rem; color: var(--text-color); opacity: 0.9; line-height: 1.4; padding-left: 24px;">
+                <!-- 인게임 설명 번역 툴팁 -->
+                <div id="modalIngameDesc"
+                    style="display: none; font-size: 0.78rem; line-height: 1.45; color: var(--text-color); opacity: 0.85; padding: 10px; background: rgba(0, 0, 0, 0.03); border-radius: 8px; font-style: italic; border-left: 3px solid var(--accent-color);">
                 </div>
             </div>
 
-            <div id="modalCompat"
-                style="display: none; flex-direction: column; gap: 4px; background: rgba(230, 126, 34, 0.15); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(230, 126, 34, 0.35); margin-top: 8px;">
-                <div
-                    style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #e67e22;">
-                    <sp        const dataset = [
-            // === 1. 머즐 (Barrel · Muzzle) ===
-            {
-                id: "flashhider",
-                tags: ["mobility", "lowPenalty"],
-                name: "FLASH HIDER",
-                category: "머즐",
-                unlockKills: 100,
-                oneLiner: "총구 화염이 에임을 크게 가려 사격 피아가 어렵거나, 패널티 없이 가벼운 비주얼 흔들림을 다잡고 싶을 때 적합.",
-                advanced: "격발 시의 총구 화염을 완벽히 차단하여 조준점을 맑게 해 줍니다. 조작성 및 기동성 스탯이 완벽히 유지되는 무손실 파츠이나, 단 지향사격 확산 감쇠가 5% 소폭 감소합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "5% 감소",
-                camHoriz: "5% 감소",
-                recoilDesc: "물리 총구 반동 자체는 완전히 같으나, 격발 시 화면 자체가 진동하며 부르르 떨리는 화면 반동만 지향/조준 모두 5%씩 억제해 줍니다."
-            },
-            {
-                id: "compensator",
-                tags: ["recoil"],
-                name: "COMPENSATOR",
-                category: "머즐",
-                unlockKills: 120,
-                oneLiner: "수직 반동은 쏠만하지만 화면이 좌우로 불규칙하게 요동쳐 추적이 힘든 수평 반동 위주 총기에 적합.",
-                advanced: "조작 속도, 기동성, 탄속, 사거리 등 어떠한 조작 및 탄도학적 패널티도 존재하지 않는 완전 무제한 순정 스펙을 지닙니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "조준 15% 증가, 지향 20% 증가 [패널티]",
-                camHoriz: "조준 40% 크게 감소, 지향 30% 감소",
-                recoilDesc: "격발 시 화면이 좌우로 불규칙하게 흔들려 추적이 어려운 현상을 대폭 차단해 주는 대신 상하로 거칠게 상승하는 수직 진동은 소폭 증가합니다."
-            },
-            {
-                id: "muzzlebrake",
-                tags: ["recoil"],
-                name: "MUZZLE BRAKE",
-                category: "머즐",
-                unlockKills: 175,
-                oneLiner: "좌우 흔들림은 적으나 사격 시 화면 전체가 위로 가파르게 튀어 오르는 수직 반동 위주 총기(예: M16계열, 단발 광클총 등)에 적합.",
-                advanced: "컴펜세이터와 동일하게 조작 속도, 무빙 속도, 탄속 등 어떠한 부차적 조작 손실도 없는 완벽한 원본 스펙을 보존합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "30% 감소",
-                camHoriz: "10% 증가 (패널티)",
-                recoilDesc: "격발 시 화면 전체가 위로 요동치며 상승하는 수직 카메라 떨림을 매우 크게 상쇄시켜 사격을 평탄하게 만들지만 좌우 진동은 다소 늘어납니다."
-            },
-            {
-                id: "tbreak",
-                tags: ["recoil"],
-                name: "T-BREAK",
-                category: "머즐",
-                unlockKills: 225,
-                oneLiner: "수직/수평 화면 흔들림을 모두 제어하고 싶지만, 머즐브레이크나 컴펜세이터 고유의 반대 방향 반동 증가 패널티는 완전히 피하고 싶을 때 적합.",
-                advanced: "기동성, 탄속, 사거리에 어떠한 마이너스 요소도 붙지 않는 무제한 파츠입니다. 단 지향 사격 시 화면 흔들림 수치가 최대 15% 증가하는 고유의 패널티가 설계되어 있습니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "조준 12% 감소, 지향 10% 증가 [패널티]",
-                camHoriz: "조준 15% 감소, 지향 15% 증가 [패널티]",
-                recoilDesc: "조준 사격 중에 화면 전체가 기우뚱하고 좌우로 회전하듯 뒤틀리는 롤(Z축) 화면 흔들림을 50% 완화하는 비주얼 리코일 종결 머즐입니다."
-            },
-            {
-                id: "xring",
-                tags: ["recoil"],
-                name: "X-RING",
-                category: "머즐",
-                unlockKills: 275,
-                oneLiner: "화면 흔들림은 상관없으니 오직 탄착군 자체를 흩뜨리는 물리적인 총구 반동 패턴 크기 자체를 대폭 좁히고 싶을 때 적합.",
-                advanced: "조작 속도 및 기동성은 고스란히 유지됩니다. 단 지향사격 확산 감쇠 스탯이 10% 감소하는 유일한 조작적 감점이 적용됩니다.",
-                modelTransVert: "조준 15% 감소, 지향 9% 감소",
-                modelTransHoriz: "조준 15% 감소, 지향 9% 감소",
-                modelRotVert: "조준 15% 감소, 지향 5% 증가 [패널티]",
-                modelRotHoriz: "조준 15% 감소, 지향 5% 증가 [패널티]",
-                camVert: "5% 증가 (패널티)",
-                camHoriz: "5% 증가 (패널티)",
-                recoilDesc: "사격 시 화면 흔들림은 약간 늘어나지만, 실제 총구 에임 자체가 사방으로 튀며 명중률을 해치는 총구 물리 반동 자체를 조준 시 무려 15%나 강력하게 제어해 줍니다."
-            },
-            {
-                id: "halbek",
-                tags: [],
-                name: "HALBEK DEVICE",
-                category: "머즐",
-                unlockKills: 765,
-                oneLiner: "수직 반동이 너무 심해 격발 시 에임을 위로 올리는 변칙 플레이나 고유의 반동 방향 변환을 활용하고 싶을 때 적합.",
-                advanced: "지향사격 복원 속도가 10% 감소하고, 지향사격 확산 감쇠가 20% 크게 감소하는 지향 패널티가 있습니다. 대신 조준 속도를 포함한 조작성, 기동성, 탄속, 사거리 등 다른 모든 조작 스탯은 패널티 없이 순정을 그대로 유지합니다.",
-                modelTransVert: "조준 60% 감소",
-                modelTransHoriz: "조준 30% 증가 [패널티]",
-                modelTransDepth: "조준 50% 증가 [패널티]",
-                modelRotVert: "조준 25% [감소], 지향 20% 증가 [패널티]",
-                modelRotHoriz: "조준 30% 증가 [패널티], 지향 20% 증가 [패널티]",
-                camVert: "조준 반전 [수직 30% 감소]",
-                camHoriz: "변화 없음",
-                recoilDesc: "격발 시 반동 수식에 음수 배율을 곱하여 총구가 위가 아닌 아래로 내려가는 등 수직/수평 반동 방향 자체가 완벽하게 반전되는 전용 부착물입니다."
-            },
-            {
-                id: "loudner",
-                tags: [],
-                name: "LOUDNER",
-                category: "머즐",
-                unlockKills: 835,
-                oneLiner: "적의 시야를 강하게 흔드는 강한 제압력이 필요하고 반동 패턴보다는 사격 소리 극대화 및 변칙 플레이를 원할 때 적합.",
-                advanced: "사격 제압력이 25% 상승하여 상대 에임을 흔들어버립니다. 패널티로 탄속이 5% 감소하고, 지향사격 확산 감쇠 수치가 10% 감소합니다. 조작성과 기동성은 순정을 유지합니다.",
-                modelTransVert: "5~10% 감소",
-                modelTransHoriz: "5~10% 감소",
-                modelRotVert: "5~10% 감소",
-                modelRotHoriz: "5~10% 감소",
-                camVert: "10% 감소",
-                camHoriz: "10% 감소",
-                recoilDesc: "사격 총소리가 매우 크고 투박해지며, 조준 사격 시 화면이 롤링(Z축) 방향으로 60% 대폭 증가하는 패널티가 있지만 실제 수직/수평 반동은 미세하게 억제해 줍니다."
-            },
-            {
-                id: "muzzlebooster",
-                tags: ["power"],
-                name: "MUZZLE BOOSTER",
-                category: "머즐",
-                unlockKills: 1200,
-                oneLiner: "반동 증가 패널티를 감수하고라도 연사 속도(RPM)를 극대화해 최단 킬 타임(TTK) 화력을 극한으로 끌어올리고 싶을 때 적합.",
-                advanced: "연사 속도가 향상되어 최단 킬 타임이 한 박자 빠르게 단축되는 강력한 화력 버프를 줍니다. 단 제압력이 50% 급감하고 지향사격 확산도가 넓어지며 확산 감쇠가 10% 감소합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelTransDepth: "10% 증가 (패널티)",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "12% 증가 (패널티)",
-                camHoriz: "8% 증가 (패널티)",
-                recoilDesc: "연사 주기가 단축되는 대신 실제 총기가 뒤로 밀려나는 전후 킥 반동(Z축)과 수직/수평 카메라 흔들림이 약 10% 내외로 늘어나 격발감이 다소 사나워집니다."
-            },
+            
 
-            // === 2. 소음기 (Barrel · Suppressor) ===
+            <div class="markdown-block" id="modalAdvancedText"
+                style="margin-top: 6px; font-size: 0.85rem; opacity: 0.9; line-height: 1.5;"></div>
+
+            <div class="markdown-block" id="modalRecoilDesc"
+                style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">격발 성향 설명</div>
+            <div class="glass-panel" id="modalStatBars"
+                style="padding: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 12px;">
+                <!-- JavaScript를 통해 동적 렌더링 -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // 분석 데이터셋
+        const dataset = [
             {
                 id: "duty",
+                unlockKills: 30,
                 tags: [],
                 name: "DUTY SUPPRESSOR",
                 category: "소음기",
-                unlockKills: 30,
+                ingameDesc: "70스터드 감지 반경. 범용적이고 균형 잡힌 듀티 소음기입니다. 준수한 수준의 소음 은폐 및 전반적인 반동 감소를 제공하지만, 조준 시 조작 속도와 기동성이 감소하는 맞교환이 따릅니다.",
                 noiseRange: "70스터드 밖 차단",
-                noiseDesc: "가장 표준적이고 무난한 수준의 소음 차단 범위를 보여주는 사양입니다.",
                 oneLiner: "조작 속도 및 조준 시 이동 속도 감소 대신 수직/수평 총기 및 카메라 흔들림 감소와 탄속 및 대미지 사거리 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "70스터드 밖에서 노출되지 않습니다. 탄속이 2.5% 증가하고, 대미지 사거리 역시 3.5% 증가하는 탄도학 버프를 받습니다. 이동 및 조준 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 모든 조작 속도가 5% 감소하며, 조준 시 이동 속도가 6% 감소합니다. 기본 이동 속도는 순정 상태를 그대로 유지합니다.",
                 modelTransVert: "조준 5% 감소, 지향 9% 감소",
@@ -1249,9 +1127,8 @@
                 tags: ["mobility", "lowPenalty"],
                 name: "LIGHT SUPPRESSOR",
                 category: "소음기",
-                unlockKills: 50,
+                ingameDesc: "100스터드 감지 반경. 소음 은폐 범위를 감수하는 대신, 소폭의 반동 감소를 제공하며 조작성에 미치는 영향을 최소화한 경량 소음기입니다.",
                 noiseRange: "100스터드 밖 차단",
-                noiseDesc: "총기의 고유 기동성을 온전히 보존하는 경량형 사양인 대신, 레이더 은폐 범위 자체는 다소 좁은 편입니다.",
                 oneLiner: "조작 속도 미세 감소 대신 조준 및 기본 이동 속도 유지와 함께 수평 회전 물리 반동 및 카메라 흔들림 소폭 감소, 탄속 및 대미지 사거리 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "100스터드 밖에서 노출되지 않습니다. 또한 탄속이 1.5% 증가하는 버프를 받으며 대미지 사거리는 순정 상태 그대로 유지됩니다. 흔들림(Sway)은 2.5% 안정되나 조작 속도가 2.5% 소폭 감소하며, 기본 및 조준 이동 속도는 패널티 없이 그대로 유지됩니다.",
                 modelTransVert: "변화 없음",
@@ -1267,9 +1144,8 @@
                 tags: [],
                 name: "MEDIUM SUPPRESSOR",
                 category: "소음기",
-                unlockKills: 150,
+                ingameDesc: "50스터드 감지 반경. 평균적인 소음 은폐력을 갖춘 소음기로, 회전 반동 감소에 초점을 맞추는 동시에 카메라 보디 반동을 완만하게 감소시키고 사거리 성능을 소폭 증가시킵니다. 기동성과 조작성은 감소합니다.",
                 noiseRange: "50스터드 밖 차단",
-                noiseDesc: "듀티 소음기보다도 더욱 차단 범위가 우수하여 훌륭한 수준의 소음 차단 성능을 보여줍니다.",
                 oneLiner: "조작 속도 및 기본/조준 시 이동 속도 감소 대신 탄속 및 대미지 사거리 증가와 수평 회전 반동, 모든 카메라 흔들림 소폭 감소를 가져가는 맞교환 구조에 적합.",
                 advanced: "50스터드 밖에서 노출되지 않습니다. 또한 탄속이 3.5% 증가하고, 대미지 사거리 역시 3.5% 증가하는 버프를 받습니다. 흔들림(Sway)은 5% 안정되나 패널티로 조준 속도를 포함한 조작 속도가 7.5% 감소하며, 기본 이동 속도가 2% 감소, 조준 시 이동 속도가 7% 감소합니다.",
                 modelTransVert: "변화 없음",
@@ -1285,9 +1161,8 @@
                 tags: ["recoil", "power"],
                 name: "HEAVY SUPPRESSOR",
                 category: "소음기",
-                unlockKills: 205,
+                ingameDesc: "가장 우수한 소음 은폐 성능과 가장 큰 사거리 향상 효과를 제공하는 헤비 소음기입니다. 자체 중량으로 인해 전반적인 반동을 크게 감소시켜 주지만, 기동성과 조작성 역시 가장 크게 하락시킵니다.",
                 noiseRange: "30스터드 밖 차단",
-                noiseDesc: "조작성과 이동 속도를 무겁게 희생하는 대신, 가장 조용하고 강력한 수준의 암살용 레이더 차단 성능을 보여줍니다.",
                 oneLiner: "조작 속도 및 기본/조준 시 이동 속도 대폭 감소 대신 모든 수직/수평 물리 반동 및 카메라 흔들림 대폭 감소와 탄속 및 사거리 대폭 증가를 가져가는 맞교환 구조에 적합.",
                 advanced: "30스터드 밖에서 노출되지 않습니다. 또한 탄속이 5% 증가하고, 대미지 사거리 역시 10% 크게 증가하는 강력한 사거리 버프를 제공합니다. 조준 흔들림(Sway) 또한 10% 안정됩니다. 다만 패널티로 조준 속도를 포함한 조작 속도가 10% 감소하고, 기본 이동 속도가 6.5% 감소, 조준 시 이동 속도가 12.5% 대폭 감소합니다.",
                 modelTransVert: "12% 감소",
@@ -1303,9 +1178,8 @@
                 tags: ["recoil"],
                 name: "COMPED SUPPRESSOR",
                 category: "소음기",
-                unlockKills: 245,
+                ingameDesc: "보정용 브레이크 포트가 설계된 소음기로, 수평 카메라 반동을 크게 개선하는 동시에 회전 및 이동 물리 반동 또한 감소시킵니다. 기동성과 조작성은 감소하며, 소음 은폐 및 사거리 효율은 다소 떨어집니다.",
                 noiseRange: "80스터드 밖 차단",
-                noiseDesc: "소음 전파 범위가 다소 넓은 편입니다.",
                 oneLiner: "조작 속도 및 기본/조준 시 이동 속도 감소와 다소 넓은 노출 범위 대신 탄속 및 대미지 사거리 증가와 물리 반동 및 화면 흔들림 제어를 가져가는 맞교환 구조에 적합.",
                 advanced: "80스터드 밖에서 노출되지 않습니다. 대신 탄속이 3.5% 증가하고 대미지 사거리가 2.5% 증가하며, 흔들림(Sway)은 5% 안정됩니다. 다만 패널티로 조작 속도가 7.5% 감소하고, 기본 이동 속도가 2% 감소, 조준 시 이동 속도가 7% 감소합니다.",
                 modelTransVert: "5% 감소",
@@ -1317,32 +1191,13 @@
                 recoilDesc: "물리 반동 제어력이 높지 않으나, 격발 시 총기가 튀는 수직/수평 물리 반동과 모든 화면 흔들림 진동을 고르게 완화해 줍니다."
             },
             {
-                id: "osprey",
-                tags: [],
-                name: "OSPREY SUPPRESSOR",
-                category: "소음기",
-                compatibility: ["pdw"],
-                unlockKills: 250,
-                noiseRange: "35스터드 밖 차단",
-                noiseDesc: "좁은 레이더 노출 범위를 보장합니다.",
-                oneLiner: "조작 속도 및 기동성의 대폭 감소 대신 패널티 없는 탄속/사거리 보존과 매우 뛰어난 소음 효과 및 지향사격 정확도를 취하는 맞교환 구조에 적합.",
-                advanced: "35스터드 밖에서 노출되지 않습니다. 지향사격 복원 속도와 집탄 복원력(Damping)이 일괄 20% 크게 상승하여 지향사격 시 명중률이 비약적으로 강화됩니다. 단, 패널티로 총기를 꺼내는 속도가 20% 대폭 감소하고 조준 속도가 10% 감소하며, 기본 이동 속도가 7%, 조준 시 이동 속도가 11% 감소합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "변화 없음",
-                camHoriz: "변화 없음",
-                recoilDesc: "물리적인 총기 반동 및 시각적인 화면 흔들림 수치에 변화를 주지 않으며 순정 상태의 반동감을 그대로 유지합니다."
-            },
-            {
                 id: "muffler",
+                unlockKills: 600,
                 tags: ["recoil"],
                 name: "MUFFLER",
                 category: "소음기",
-                unlockKills: 600,
+                ingameDesc: "탄속 10% 감소. 소음 은폐 효과 없음. 총성 크기 및 총기 반동을 줄여주는 저렴한 급조(수제) '소음기'이지만, 격발 시 여전히 적 레이더에 감지되며 연사 속도(RPM)를 10% 감소시킵니다.",
                 noiseRange: "50스터드 밖 차단",
-                noiseDesc: "연사력 패널티 없이 강력한 반동 제어력과 함께 50스터드 밖 레이더 차단 성능을 고루 제공하는 고성능 사양입니다.",
                 oneLiner: "조작 속도 및 조준 시 이동 속도 소폭 감소 대신 모든 반동 복원 주기 확보, 수평/수직 회전 반동 및 조준 카메라 흔들림 제어, 소음 효과 장착을 가져가는 맞교환 구조에 적합.",
                 advanced: "50스터드 밖에서 노출되지 않습니다. 연사 속도가 10% 감소하며 탄속 및 사거리가 유지됩니다. 다만 조작 속도가 7.5% 감소하고, 조준 시 이동 속도가 약 6% 소폭 감소합니다. 기본 이동 속도는 순정을 유지합니다.",
                 modelTransVert: "변화 없음",
@@ -1355,12 +1210,12 @@
             },
             {
                 id: "oilfilter",
+                unlockKills: 990,
                 tags: ["recoil"],
                 name: "OIL FILTER",
                 category: "소음기",
-                unlockKills: 990,
+                ingameDesc: "탄속 10% 감소. 5스터드 감지 반경. 대형 오일 필터를 개조하여 제작한 고품질 수제 소음기입니다. 연사 속도와 사거리를 희생하는 대가로, 매우 우수한 소음 은폐 성능 및 대미지 보존 능력, 그리고 총열 무게 증가에 따른 더 강력한 반동 제어력을 얻을 수 있습니다.",
                 noiseRange: "5스터드 밖 차단",
-                noiseDesc: "사실상 완전 무음입니다. 코앞에 붙어있는 초근접 상황이 아니면 격발 시 적 레이더에 절대 감지되지 않는 최강의 은폐 성능을 보입니다.",
                 oneLiner: "탄속 저하, 조작 속도 및 기동성 대폭 감소, 사거리 손실 대신 최고의 레이더 은폐 효과, 반동 복원력 극대화, 물리 및 카메라 반동 감소를 가져가는 맞교환 구조에 적합.",
                 advanced: "5스터드 밖에서 노출되지 않습니다. 대신 연사속도는 5%, 탄속이 10% 감소하고, 사거리가 최대 5%, 최저 10% 크게 감소하며, 조준 속도를 포함한 조작 속도가 10% 일괄 감소합니다. 또한 기동성 패널티로 기본 이동 속도가 6.5% 감소, 조준 시 이동 속도가 12.5% 대폭 감소합니다.",
                 modelTransVert: "20% 감소",
@@ -1371,30 +1226,13 @@
                 camHoriz: "12% 감소",
                 recoilDesc: "반동 복원 능력이 대폭 상향되어, 격발 중 모든 총구 튕김과 화면 흔들림 진동이 자석처럼 신속하게 정렬되는 유니크한 안정감을 선사합니다."
             },
-
-            // === 3. 그립 (Grip) ===
-            {
-                id: "vertical",
-                tags: ["mobility", "lowPenalty"],
-                name: "VERTICAL GRIP",
-                category: "그립",
-                unlockKills: 45,
-                oneLiner: "반동 제어 스탯은 필요 없고, 무빙 샷 시의 조준선 흔들림 안정성과 지향 사격 복원력을 챙겨야 하는 런앤건 총기에 적합.",
-                advanced: "지향사격 확산도가 14% 좁아지고 지향 복원 속도가 10% 빠르게 회복됩니다. 또한 이동 중 조준 흔들림(Walk Sway)이 33% 대폭 감소하여 무빙 안정성이 우수합니다. 조작 속도는 약 4.8% 미세하게 감소하며 기본 및 조준 이동 속도, 대미지 사거리는 순정을 유지합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "변화 없음",
-                camHoriz: "변화 없음",
-                recoilDesc: "물리적인 반동 수치는 가감 없이 완벽한 순정 상태와 동일하게 유지되는 기동 및 유틸리티 전용 지향 그립입니다."
-            },
             {
                 id: "angled",
+                unlockKills: 115,
                 tags: [],
                 name: "ANGLED GRIP",
                 category: "그립",
-                unlockKills: 115,
+                ingameDesc: "",
                 oneLiner: "수직 반동은 쏠만하지만 좌우로 무작위로 튀는 수평 회전 반동이 거슬리는 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하여 무빙 조작성이 소폭 둔화됩니다. 또한 조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소합니다. 탄속, 사거리, 조준선 흔들림(Sway) 스탯은 모두 패널티 없이 완벽하게 유지됩니다.",
                 modelTransVert: "9% 감소",
@@ -1407,10 +1245,11 @@
             },
             {
                 id: "potato",
+                unlockKills: 180,
                 tags: [],
                 name: "POTATO GRIP",
                 category: "그립",
-                unlockKills: 180,
+                ingameDesc: "",
                 oneLiner: "격발 시 총 자체가 뒤로 크게 밀리는 전후 반동과 화면 진동을 균형 있게 억제하고 싶은 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하여 조작성이 소폭 둔해지며, 이동 중 조준 흔들림 스탯이 일괄 5% 증가하는 패널티가 적용됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
                 modelTransVert: "9% 감소",
@@ -1422,27 +1261,12 @@
                 recoilDesc: "사격 시 총구 자체가 뒤로 가파르게 밀리는 킥과 화면 전체가 흔들리는 현상을 동시에 억제해 주어 시각적으로 상하 흔들림이 정돈된 느낌을 줍니다."
             },
             {
-                id: "skeleton",
-                tags: ["mobility"],
-                name: "SKELETON GRIP",
-                category: "그립",
-                unlockKills: 205,
-                oneLiner: "반동은 잘 잡혀 있어 제어할 필요가 없고, 근접전에서 조준 및 반응 속도를 극한으로 끌어올리고 싶은 총기에 적합.",
-                advanced: "조준 속도 및 질주 전환 속도가 모두 15% 증가하고 총기를 꺼내는 속도 역시 10% 단축되어 반응성이 민첩해집니다. 추가로 이동 사격 시 흔들림이 13% 안정되지만, 패널티로 조준 시 이동 속도가 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "변화 없음",
-                camHoriz: "변화 없음",
-                recoilDesc: "반동 제어 효과를 전혀 제공하지 않는 대신 조작 관련 모든 스피드를 한계 돌파시켜 주는 근접 순발력 특화형 그립입니다."
-            },
-            {
                 id: "folding",
+                unlockKills: 265,
                 tags: ["recoil"],
                 name: "FOLDING GRIP",
                 category: "그립",
-                unlockKills: 265,
+                ingameDesc: "",
                 oneLiner: "수직/수평 물리 반동과 화면 요동이 모두 심해 전체적인 안정성을 대폭 올리고 싶은 총기에 적합.",
                 advanced: "조준 속도를 포함한 전반적인 조작 속도가 약 4.8% 미세하게 감소하고, 이동 중 조준 흔들림이 일괄 10% 증가하는 패널티를 가집니다. 다만 조준 시 이동 속도를 희생하지 않고 순정 수치를 그대로 유지하여 기동성을 보존합니다. 탄속 및 대미지 사거리 역시 순정을 유지합니다.",
                 modelTransVert: "9% 감소",
@@ -1455,10 +1279,11 @@
             },
             {
                 id: "stubby",
+                unlockKills: 355,
                 tags: ["recoil"],
                 name: "STUBBY GRIP",
                 category: "그립",
-                unlockKills: 355,
+                ingameDesc: "",
                 oneLiner: "화면이 떨리는 비주얼 반동보다는 실제 탄착군이 퍼지는 물리적인 총구 들림을 확실히 좁히고 싶은 총기에 적합.",
                 advanced: "조준 시 이동 속도가 9% 감소하며, 이동 중 조준선 흔들림 스탯이 일괄 17% 개선되어 안정화됩니다. 조준 속도를 포함한 조작 속도는 약 4.8% 미세하게 감소하며, 탄속 및 대미지 사거리는 순정을 유지합니다.",
                 modelTransVert: "9% 감소",
@@ -1470,27 +1295,12 @@
                 recoilDesc: "격발 시 총구 자체가 상하좌우로 튕기는 순수 물리적인 앙등력은 강하게 억제해 주지만, 카메라가 부르르 떨리는 진동은 그대로 살아있어 조준선 중심만 단단히 고정된 느낌을 줍니다."
             },
             {
-                id: "pistol",
-                tags: ["mobility"],
-                name: "PISTOL GRIP",
-                category: "그립",
-                unlockKills: 580,
-                oneLiner: "정조준보단 지향 사격을 지향하며, 무빙 격발 시 에임이 벌어지는 폭을 최대한 억제하고 싶은 총기에 적합.",
-                advanced: "지향사격 확산도가 14% 정돈되고 복원력이 10% 증가하며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 조준 시 이동 속도가 9% 감소하고 조준 속도를 포함한 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
-                modelTransVert: "변화 없음",
-                modelTransHoriz: "변화 없음",
-                modelRotVert: "변화 없음",
-                modelRotHoriz: "변화 없음",
-                camVert: "변화 없음",
-                camHoriz: "변화 없음",
-                recoilDesc: "물리적인 총구 튕김이나 화면 흔들림 수치 변화 없이 오직 지향 사격의 집탄율과 기동 시 에임 안정만 보강하는 사양입니다."
-            },
-            {
                 id: "romanian",
+                unlockKills: 630,
                 tags: ["recoil"],
                 name: "ROMANIAN GRIP",
                 category: "그립",
-                unlockKills: 630,
+                ingameDesc: "",
                 oneLiner: "정조준 속도와 기동성을 크게 포기하더라도 화면이 좌우로 사정없이 튀는 비주얼 반동을 극단적으로 지우고 싶은 총기에 적합.",
                 advanced: "정조준 사격 시 이동 속도가 무려 17% 대폭 감소하여 무빙 기동성이 무거워집니다. 조준 속도를 포함한 총기 조작 속도 역시 일괄 9% 감소하여 총기 반응성이 느려지지만, 무빙 시 조준선 흔들림 스탯은 일괄 17% 안정됩니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelTransVert: "9% 감소",
@@ -1503,10 +1313,11 @@
             },
             {
                 id: "sideways",
+                unlockKills: 715,
                 tags: [],
                 name: "SIDE WAYS GRIP",
                 category: "그립",
-                unlockKills: 715,
+                ingameDesc: "",
                 oneLiner: "정조준보다는 지향 사격을 주로 사용하며 격발 시 화면의 롤링(Z축 뒤틀림) 진동이 가한 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 좁아지고 지향사격 복원 속도가 10% 빨라져 명중률이 강화되며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 정조준 사격 중 이동 속도가 17% 대폭 감소하고 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelTransVert: "변화 없음",
@@ -1519,10 +1330,11 @@
             },
             {
                 id: "chainsaw",
+                unlockKills: 950,
                 tags: [],
                 name: "CHAINSAW GRIP",
                 category: "그립",
-                unlockKills: 950,
+                ingameDesc: "",
                 oneLiner: "정조준을 완전히 포기하고 넓은 시야와 빠른 연사력으로 지향 사격만 난사하는 경기관총(LMG) 등의 빌드에 적합.",
                 advanced: "정조준(ADS) 기능 자체가 제거되어 지향사격 구도로 고정됩니다. 지향사격 확산도가 14% 좁아지고 복원 속도 및 복원력이 일괄 20% 크게 상승합니다. 다만 조작 속도가 일괄 17% 크게 감소하고 조준 시 이동 속도 역시 17% 감소합니다. 이동 사격 시 흔들림은 17% 안정되며 탄속 및 사거리는 순정을 유지합니다.",
                 modelTransVert: "10% 증가 (패널티)",
@@ -1532,14 +1344,14 @@
                 camVert: "9% 감소",
                 camHoriz: "9% 감소",
                 recoilDesc: "지향 사격에 극대화된 스펙을 제공하여 총기가 요동치는 회전 각도를 고르게 제어해 주지만, 총체적 물리 모델 자체가 뒤로 밀리는 충격(Translation)은 오히려 증가합니다."
-            }
-        ];��합니다."
             },
             {
                 id: "vertical",
+                unlockKills: 45,
                 tags: ["mobility", "lowPenalty"],
                 name: "VERTICAL GRIP",
                 category: "그립",
+                ingameDesc: "",
                 oneLiner: "반동 제어 스탯은 필요 없고, 무빙 샷 시의 조준선 흔들림 안정성과 지향 사격 복원력을 챙겨야 하는 런앤건 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 좁아지고 지향 복원 속도가 10% 빠르게 회복됩니다. 또한 이동 중 조준 흔들림(Walk Sway)이 33% 대폭 감소하여 무빙 안정성이 우수합니다. 조작 속도는 약 4.8% 미세하게 감소하며 기본 및 조준 이동 속도, 대미지 사거리는 순정을 유지합니다.",
                 modelTransVert: "변화 없음",
@@ -1552,9 +1364,11 @@
             },
             {
                 id: "pistol",
+                unlockKills: 580,
                 tags: ["mobility"],
                 name: "PISTOL GRIP",
                 category: "그립",
+                ingameDesc: "",
                 oneLiner: "정조준보단 지향 사격을 지향하며, 무빙 격발 시 에임이 벌어지는 폭을 최대한 억제하고 싶은 총기에 적합.",
                 advanced: "지향사격 확산도가 14% 정돈되고 복원력이 10% 증가하며, 무빙 시 조준선 흔들림이 9% 안정됩니다. 다만 패널티로 조준 시 이동 속도가 9% 감소하고 조준 속도를 포함한 조작 속도가 일괄 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelTransVert: "변화 없음",
@@ -1567,9 +1381,11 @@
             },
             {
                 id: "skeleton",
+                unlockKills: 205,
                 tags: ["mobility"],
                 name: "SKELETON GRIP",
                 category: "그립",
+                ingameDesc: "",
                 oneLiner: "반동은 잘 잡혀 있어 제어할 필요가 없고, 근접전에서 조준 및 반응 속도를 극한으로 끌어올리고 싶은 총기에 적합.",
                 advanced: "조준 속도 및 질주 전환 속도가 모두 15% 증가하고 총기를 꺼내는 속도 역시 10% 단축되어 반응성이 민첩해집니다. 추가로 이동 사격 시 흔들림이 13% 안정되지만, 패널티로 조준 시 이동 속도가 9% 감소합니다. 탄속 및 사거리는 순정을 유지합니다.",
                 modelTransVert: "변화 없음",
@@ -1582,9 +1398,11 @@
             },
             {
                 id: "flashhider",
+                unlockKills: 100,
                 tags: ["mobility", "lowPenalty"],
                 name: "FLASH HIDER",
                 category: "머즐",
+                ingameDesc: "총구를 빠져나오는 연소 가스를 냉각 및 분산시킴으로써 격발 시 미연소 추진제(화약)로 인해 발생하는 총구 화염을 제거합니다. 이로 인해 지향사격 안정성이 소폭 감소하지만, 반동 제어력은 소폭 향상됩니다.",
                 oneLiner: "총구 화염이 에임을 크게 가려 사격 피아가 어렵거나, 패널티 없이 가벼운 비주얼 흔들림을 다잡고 싶을 때 적합.",
                 advanced: "격발 시의 총구 화염을 완벽히 차단하여 조준점을 맑게 해 줍니다. 조작성 및 기동성 스탯이 완벽히 유지되는 무손실 파츠이나, 단 지향사격 확산 감쇠가 5% 소폭 감소합니다.",
                 modelTransVert: "변화 없음",
@@ -1600,6 +1418,7 @@
                 tags: ["recoil"],
                 name: "COMPENSATOR",
                 category: "머즐",
+                ingameDesc: "총구 가스를 수직으로 분산시켜 수평 반동과 좌우 흔들림을 감소시키지만, 수직 반동 상승은 소폭 증가합니다.",
                 oneLiner: "수직 반동은 쏘기 편하지만 화면이 좌우로 불규칙하게 요동쳐 추적이 힘든 수평 반동 위주 총기에 적합.",
                 advanced: "조작 속도, 기동성, 탄속, 사거리 등 어떠한 조작 및 탄도학적 패널티도 존재하지 않는 완전 무제한 순정 스펙을 지닙니다.",
                 modelTransVert: "변화 없음",
@@ -1615,6 +1434,7 @@
                 tags: ["recoil"],
                 name: "MUZZLE BRAKE",
                 category: "머즐",
+                ingameDesc: "총구 가스를 수평으로 분산시켜 수직 반동 상승을 감소시키는 표준 총구 장치입니다. 수평 반동에는 실제적인 영향이 없으나, 수직 반동이 감소함에 따라 마치 수평 반동도 줄어든 것처럼 느끼게 해 줍니다.",
                 oneLiner: "좌우 흔들림은 적으나 사격 시 화면 전체가 위로 가파르게 튀어 오르는 수직 반동 위주 총기(예: M16계열, 단발 광클총 등)에 적합.",
                 advanced: "컴펜세이터와 동일하게 조작 속도, 무빙 속도, 탄속 등 어떠한 부차적 조작 손실도 없는 완벽한 원본 스펙을 보존합니다.",
                 modelTransVert: "변화 없음",
@@ -1630,6 +1450,7 @@
                 tags: ["recoil"],
                 name: "T-BREAK",
                 category: "머즐",
+                ingameDesc: "특정 반동 패턴을 줄이는 데 있어서는 컴펜세이터나 머즐 브레이크만큼 효과적이지는 않지만, T-브레이크는 수직 및 수평 카메라 반동을 모두 감소시킵니다. 지향사격 안정성에는 영향을 주지 않습니다.",
                 oneLiner: "수직/수평 화면 흔들림을 모두 제어하고 싶지만, 머즐브레이크나 컴펜세이터 고유의 반대 방향 반동 증가 패널티는 완전히 피하고 싶을 때 적합.",
                 advanced: "기동성, 탄속, 사거리에 어떠한 마이너스 요소도 붙지 않는 무제한 파츠입니다. 단 지향 사격 시 화면 흔들림 수치가 최대 15% 증가하는 고유의 패널티가 설계되어 있습니다.",
                 modelTransVert: "변화 없음",
@@ -1645,6 +1466,7 @@
                 tags: ["recoil"],
                 name: "X-RING",
                 category: "머즐",
+                ingameDesc: "다른 총구 부착물들과 달리, 이 독특한 장치는 회전 반동과 총기 변위(물리 이동 반동)를 개선해 줍니다. 체감되는 카메라 반동이 소폭 증가하고 지향사격 시 효율이 다소 떨어집니다. 달 크기만한 전투 기지를 파괴하는 데는 그리 효과적이지 않습니다.",
                 oneLiner: "화면 흔들림은 상관없으니 오직 탄착군 자체를 흩뜨리는 물리적인 총구 반동 패턴 크기 자체를 대폭 좁히고 싶을 때 적합.",
                 advanced: "조작 속도 및 기동성은 고스란히 유지됩니다. 단 지향사격 확산 감쇠 스탯이 10% 감소하는 유일한 조작적 감점이 적용됩니다.",
                 modelTransVert: "조준 15% 감소, 지향 9% 감소",
@@ -1660,6 +1482,7 @@
                 tags: [],
                 name: "HALBEK DEVICE",
                 category: "머즐",
+                ingameDesc: "로디지아 기술을 적용하여 기능적으로 반동을 '반전'시키는 장치입니다. 할벡 디바이스는 총구 상승을 억제하기 위해 총기가 아래 방향으로 반동하도록 유도합니다. 다만, 실제 성능은 장착하는 총기에 따라 편차가 매우 큽니다.",
                 oneLiner: "수직 반동이 너무 심해 격발 시 에임을 위로 올리는 변칙 플레이나 고유의 반동 방향 변환을 활용하고 싶을 때 적합.",
                 advanced: "지향사격 복원 속도가 10% 감소하고, 지향사격 확산 감쇠가 20% 크게 감소하는 지향 패널티가 있습니다. 대신 조준 속도를 포함한 조작성, 기동성, 탄속, 사거리 등 다른 모든 조작 스탯은 패널티 없이 순정을 그대로 유지합니다.",
                 modelTransVert: "조준 60% 감소",
@@ -1676,6 +1499,7 @@
                 tags: [],
                 name: "LOUDNER",
                 category: "머즐",
+                ingameDesc: "원래 이게 할리우드 영화용 소품이라고 생각하셨을지 모르겠지만, 아닙니다! 라우드너는 이름 그대로 총소리를 더 크게 만들고 총구 폭발 충격을 더 강력하게 만듭니다! 그뿐만 아니라 제압력을 높여주는 동시에 수직 반동과 탄속을 감소시킵니다.",
                 oneLiner: "적의 시야를 강하게 흔드는 강한 제압력이 필요하고 반동 패턴보다는 사격 소리 극대화 및 변칙 플레이를 원할 때 적합.",
                 advanced: "사격 제압력이 25% 상승하여 상대 에임을 흔들어버립니다. 패널티로 탄속이 5% 감소하고, 지향사격 확산 감쇠 수치가 10% 감소합니다. 조작성과 기동성은 순정을 유지합니다.",
                 modelTransVert: "5~10% 감소",
@@ -1691,6 +1515,7 @@
                 tags: ["power"],
                 name: "MUZZLE BOOSTER",
                 category: "머즐",
+                ingameDesc: "연사 속도(RPM) 8% 증가. 반동력을 가중시켜 연사 속도를 높이지만, 이는 전반적인 반동 또한 강해지게 만듭니다. 제압력은 감소합니다.",
                 oneLiner: "반동 증가 패널티를 감수하고라도 연사 속도(RPM)를 극대화해 최단 킬 타임(TTK) 화력을 극한으로 끌어올리고 싶을 때 적합.",
                 advanced: "연사 속도가 향상되어 최단 킬 타임이 한 박자 빠르게 단축되는 강력한 화력 버프를 줍니다. 단 제압력이 50% 급감하고 지향사격 확산도가 넓어지며 확산 감쇠가 10% 감소합니다.",
                 modelTransVert: "변화 없음",
@@ -1796,7 +1621,7 @@
         const searchInput = document.getElementById('searchInput');
         const attachmentOrder = [
             { key: "muzzle", title: "Barrel · Muzzle", ids: ["flashhider", "compensator", "muzzlebrake", "tbreak", "xring", "halbek", "loudner", "muzzlebooster"] },
-            { key: "suppressor", title: "Barrel · Suppressor", ids: ["duty", "light", "medium", "heavy", "comped", "osprey", "muffler", "oilfilter"] },
+            { key: "suppressor", title: "Barrel · Suppressor", ids: ["duty", "light", "medium", "heavy", "comped", "muffler", "oilfilter"] },
             { key: "grip", title: "Grip", ids: ["vertical", "angled", "potato", "skeleton", "folding", "stubby", "pistol", "sideways", "chainsaw"] }
         ];
         const categoryMap = {
@@ -1932,9 +1757,6 @@
                     const noiseBadgeHtml = hasActiveNoiseSuppression
                         ? `<span class="badge" style="background: var(--badge-green); color: var(--benefit-text); border-color: rgba(46, 204, 113, 0.35); font-weight: 700;">🔕 ${item.noiseRange.replace(" 밖 차단", "")}</span>`
                         : '';
-                    const compatBadgeHtml = item.compatibility
-                        ? `<span class="badge" style="background: rgba(230, 126, 34, 0.15); color: #e67e22; border-color: rgba(230, 126, 34, 0.35); font-weight: 700;">PDW 전용</span>`
-                        : '';
 
                     const card = document.createElement('div');
                     card.className = "item-card";
@@ -1944,7 +1766,6 @@
                             <span class="item-card-title" style="flex: 1;">${escapeHtml(item.name)}</span>
                             <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
                                 <span class="badge">${escapeHtml(item.category)}</span>
-                                ${compatBadgeHtml}
                                 ${noiseBadgeHtml}
                             </div>
                         </div>
@@ -2075,20 +1896,49 @@
             document.getElementById('modalOneLiner').innerHTML = highlightText(item.oneLiner);
             document.getElementById('modalAdvancedText').innerHTML = `<strong>일반 상세:</strong> ${highlightText(item.advanced)}`;
 
-            const noiseRangeEl = document.getElementById('modalNoiseRange');
-            if (item.noiseRange) {
-                noiseRangeEl.style.display = 'flex';
-                document.getElementById('modalNoiseRangeVal').innerText = item.noiseRange;
-                document.getElementById('modalNoiseDesc').innerHTML = highlightText(item.noiseDesc || "");
-            } else {
-                noiseRangeEl.style.display = 'none';
+            const officialInfoEl = document.getElementById('modalOfficialInfo');
+            const badgesEl = document.getElementById('modalOfficialBadges');
+            const ingameDescEl = document.getElementById('modalIngameDesc');
+
+            badgesEl.innerHTML = "";
+            let hasAnyBadge = false;
+
+            // 1. 해금 조건 배지
+            if (item.kills || item.unlockKills) {
+                const killsVal = item.kills || item.unlockKills;
+                badgesEl.innerHTML += `<span class="badge" style="background: rgba(255, 255, 255, 0.2); border-color: var(--border-glass);">🎯 해금: ${killsVal} 킬</span>`;
+                hasAnyBadge = true;
             }
 
-            const compatEl = document.getElementById('modalCompat');
+            // 2. 소음 범위 배지
+            const hasActiveNoiseSuppression = item.noiseRange && !item.noiseRange.includes("소음 효과 없음") && !item.noiseRange.includes("Unsuppressed");
+            if (hasActiveNoiseSuppression) {
+                badgesEl.innerHTML += `<span class="badge" style="background: var(--badge-green); color: var(--benefit-text); border-color: rgba(46, 204, 113, 0.35);">🔕 소음 차단: ${item.noiseRange.replace(" 밖 차단", "")}</span>`;
+                hasAnyBadge = true;
+            }
+
+            // 3. 장착 호환성 배지 (⚠️ 이모지 제외 피드백 반영)
             if (item.compatibility) {
-                compatEl.style.display = 'flex';
+                const compatText = item.compatibility.includes("pdw") ? "PDW 전용" : `${item.compatibility.join(", ").toUpperCase()} 전용`;
+                badgesEl.innerHTML += `<span class="badge" style="background: rgba(230, 126, 34, 0.15); color: #e67e22; border-color: rgba(230, 126, 34, 0.35); font-weight: 700;">${compatText}</span>`;
+                hasAnyBadge = true;
+            }
+
+            // 4. 인게임 설명 번역 툴팁
+            let hasIngameDesc = false;
+            if (item.ingameDesc && item.ingameDesc.trim() !== "") {
+                ingameDescEl.style.display = 'block';
+                ingameDescEl.innerHTML = highlightText(item.ingameDesc);
+                hasIngameDesc = true;
             } else {
-                compatEl.style.display = 'none';
+                ingameDescEl.style.display = 'none';
+            }
+
+            // 공식 정보 카드 노출 여부
+            if (hasAnyBadge || hasIngameDesc) {
+                officialInfoEl.style.display = 'flex';
+            } else {
+                officialInfoEl.style.display = 'none';
             }
 
             const depthBarHtml = (item.modelTransDepth && item.modelTransDepth !== "변화 없음")
@@ -2098,15 +1948,15 @@
             const barsContainer = document.getElementById('modalStatBars');
             barsContainer.innerHTML = `
                 <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-color); margin-top: 4px; margin-bottom: 2px;">총구 반동 (Model Recoil)</div>
-                ${createStatBarHtml("총구 이동 수직", item.modelTransVert)}
-                ${createStatBarHtml("총구 이동 수평", item.modelTransHoriz)}
-                ${depthBarHtml}
-                ${createStatBarHtml("총구 회전 수직", item.modelRotVert)}
-                ${createStatBarHtml("총구 회전 수평", item.modelRotHoriz)}
+                \${createStatBarHtml("총구 이동 수직", item.modelTransVert)}
+                \${createStatBarHtml("총구 이동 수평", item.modelTransHoriz)}
+                \${depthBarHtml}
+                \${createStatBarHtml("총구 회전 수직", item.modelRotVert)}
+                \${createStatBarHtml("총구 회전 수평", item.modelRotHoriz)}
                 
                 <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-color); margin-top: 8px; margin-bottom: 2px;">화면 반동 (Camera Recoil)</div>
-                ${createStatBarHtml("화면 수직", item.camVert)}
-                ${createStatBarHtml("화면 수평", item.camHoriz)}
+                \${createStatBarHtml("화면 수직", item.camVert)}
+                \${createStatBarHtml("화면 수평", item.camHoriz)}
             `;
 
             document.getElementById('modalRecoilDesc').innerHTML = `<strong>반동 상세:</strong> ${highlightText(item.recoilDesc)}`;
@@ -2322,19 +2172,6 @@
                 `;
             };
 
-            const getCompareCompatBlock = (item) => {
-                if (!item.compatibility) return "";
-                return `
-                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; background: rgba(230, 126, 34, 0.1); border-radius: 8px; border: 1px solid rgba(230, 126, 34, 0.35);">
-                        <div style="font-size: 0.8rem; font-weight: 700; color: #e67e22; display: flex; align-items: center; gap: 4px;">
-                            <span style="color: var(--text-color); opacity: 0.8; font-weight: 600;">장착 호환성:</span>
-                            <span>PDW (SMG) 전용</span>
-                        </div>
-                        <div style="font-size: 0.78rem; opacity: 0.85; line-height: 1.3;">이 부착물은 개인방어화기(PDW) 계열의 무기에만 장착할 수 있습니다.</div>
-                    </div>
-                `;
-            };
-
             const showDepthRow = (item1.modelTransDepth && item1.modelTransDepth !== "변화 없음") ||
                 (item2.modelTransDepth && item2.modelTransDepth !== "변화 없음");
             let depthRowHtml = "";
@@ -2402,13 +2239,11 @@
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item1.name} 성향</div>
                     <div>${highlightText(item1.advanced)}</div>
                     ${getCompareNoiseBlock(item1)}
-                    ${getCompareCompatBlock(item1)}
                 </div>
                 <div class="glass-panel markdown-block" style="margin-top: 10px; padding: 12px;">
                     <div style="font-weight:700; font-size:0.9rem; margin-bottom:4px; color: var(--card-title);">${item2.name} 성향</div>
                     <div>${highlightText(item2.advanced)}</div>
                     ${getCompareNoiseBlock(item2)}
-                    ${getCompareCompatBlock(item2)}
                 </div>
             `;
         }
@@ -2524,16 +2359,6 @@
                     selectedSimCategory = cat;
                     categoryWrapper.classList.remove('open');
 
-                    // 호환성 검사 및 탈착 처리
-                    const curMuzzle = dataset.find(i => i.id === selectedSimMuzzle);
-                    if (curMuzzle && curMuzzle.compatibility && !curMuzzle.compatibility.includes(cat)) {
-                        selectedSimMuzzle = "none";
-                    }
-                    const curGrip = dataset.find(i => i.id === selectedSimGrip);
-                    if (curGrip && curGrip.compatibility && !curGrip.compatibility.includes(cat)) {
-                        selectedSimGrip = "none";
-                    }
-
                     // 카테고리 변경 시, 첫 번째 총기로 자동 바인딩
                     const firstWeaponOfCat = weapons.find(w => w.catKey === cat);
                     selectedSimWeapon = firstWeaponOfCat ? firstWeaponOfCat.id : "";
@@ -2617,11 +2442,7 @@
             });
             muzzleOptions.appendChild(noneMuzzleOpt);
 
-            const muzzleAttachments = dataset.filter(item => {
-                if (item.category !== "머즐" && item.category !== "소음기") return false;
-                if (item.compatibility && !item.compatibility.includes(selectedSimCategory)) return false;
-                return true;
-            });
+            const muzzleAttachments = dataset.filter(item => item.category === "머즐" || item.category === "소음기");
             muzzleAttachments.forEach(item => {
                 const opt = document.createElement('div');
                 opt.className = `custom-option ${item.id === selectedSimMuzzle ? 'selected' : ''}`;
@@ -2665,11 +2486,7 @@
             });
             gripOptions.appendChild(noneGripOpt);
 
-            const gripAttachments = dataset.filter(item => {
-                if (item.category !== "그립") return false;
-                if (item.compatibility && !item.compatibility.includes(selectedSimCategory)) return false;
-                return true;
-            });
+            const gripAttachments = dataset.filter(item => item.category === "그립");
             gripAttachments.forEach(item => {
                 const opt = document.createElement('div');
                 opt.className = `custom-option ${item.id === selectedSimGrip ? 'selected' : ''}`;
