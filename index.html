@@ -1948,15 +1948,15 @@
             const barsContainer = document.getElementById('modalStatBars');
             barsContainer.innerHTML = `
                 <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-color); margin-top: 4px; margin-bottom: 2px;">총구 반동 (Model Recoil)</div>
-                \${createStatBarHtml("총구 이동 수직", item.modelTransVert)}
-                \${createStatBarHtml("총구 이동 수평", item.modelTransHoriz)}
-                \${depthBarHtml}
-                \${createStatBarHtml("총구 회전 수직", item.modelRotVert)}
-                \${createStatBarHtml("총구 회전 수평", item.modelRotHoriz)}
+                ${createStatBarHtml("총구 이동 수직", item.modelTransVert)}
+                ${createStatBarHtml("총구 이동 수평", item.modelTransHoriz)}
+                ${depthBarHtml}
+                ${createStatBarHtml("총구 회전 수직", item.modelRotVert)}
+                ${createStatBarHtml("총구 회전 수평", item.modelRotHoriz)}
                 
                 <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-color); margin-top: 8px; margin-bottom: 2px;">화면 반동 (Camera Recoil)</div>
-                \${createStatBarHtml("화면 수직", item.camVert)}
-                \${createStatBarHtml("화면 수평", item.camHoriz)}
+                ${createStatBarHtml("화면 수직", item.camVert)}
+                ${createStatBarHtml("화면 수평", item.camHoriz)}
             `;
 
             document.getElementById('modalRecoilDesc').innerHTML = `<strong>반동 상세:</strong> ${highlightText(item.recoilDesc)}`;
